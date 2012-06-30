@@ -6,11 +6,9 @@ b = BaseObject()
 b.GLOBAL_CONFIG['app_name'] = 'wowza-logparse'
 b.GLOBAL_CONFIG['app_id'] = 'wowza-logparse.app'
 
-class WowzaLogParser(logfileparser.DelimitedFileParser):
+class WowzaLogParser(logfileparser.W3CExtendedLogfileParser):
     def __init__(self, **kwargs):
         kwargs.setdefault('delimiter', 'tab')
-        kwargs.setdefault('header_line_num', 4)
-        kwargs.setdefault('line_strip_chars', '#Fields:')
         super(WowzaLogParser, self).__init__(**kwargs)
     def do_sort(self, parsed):
         d = {}
@@ -24,7 +22,8 @@ class WowzaLogParser(logfileparser.DelimitedFileParser):
             d[field_index] = fields
         return d
                 
-parser = WowzaLogParser()
+#parser = WowzaLogParser()
+parser = logfileparser.W3CExtendedLogfileParser(delimiter='tab')
 parser.filename = '/home/nocarrier/programs/wowza-logparse/logs/wowzamediaserver_access.log'
 #print parser.parsed['fields_by_key']
 #print parser.sorted

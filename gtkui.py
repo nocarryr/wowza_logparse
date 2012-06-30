@@ -13,8 +13,8 @@ class MainWindow(gtkBaseUI.BaseWindow):
         topwidget = widgets.VBox()
         self.topwidget = topwidget
         d = self.parser.parsed['fields_by_line']
-        lvkwargs = dict(column_names=['index'] + d.values()[0].keys(), 
-                        list_types=[int] + [str] * len(d.values()[0].keys()))
+        lvkwargs = dict(column_names=['index'] + self.parser.field_names, 
+                        list_types=[int] + [str] * len(self.parser.field_names))
         self.listview = widgets.TreeList(**lvkwargs)
         self.update_listview()
         topwidget.pack_start(self.listview.topwidget, expand=True)
