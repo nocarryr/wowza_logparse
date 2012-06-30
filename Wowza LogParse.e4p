@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-4.6.dtd">
 <!-- eric4 project file for project Wowza LogParse -->
-<!-- Saved: 2012-06-30, 11:59:31 -->
+<!-- Saved: 2012-06-30, 12:42:44 -->
 <!-- Copyright (C) 2012 ,  -->
 <Project version="4.6">
   <Language></Language>
@@ -43,6 +43,57 @@
     <Source>Bases/archive.py</Source>
     <Source>main.py</Source>
     <Source>Bases/logfileparser.py</Source>
+    <Source>ui_base/BaseUI.py</Source>
+    <Source>ui_base/__init__.py</Source>
+    <Source>ui_base/bases/widgets.py</Source>
+    <Source>ui_base/bases/simple.py</Source>
+    <Source>ui_base/bases/__init__.py</Source>
+    <Source>ui_base/fltk/fltkBaseUI.py</Source>
+    <Source>ui_base/fltk/__init__.py</Source>
+    <Source>ui_base/fltk/bases/widgets.py</Source>
+    <Source>ui_base/fltk/bases/fltksimple.py</Source>
+    <Source>ui_base/fltk/bases/ui_modules.py</Source>
+    <Source>ui_base/fltk/bases/__init__.py</Source>
+    <Source>ui_base/touchosc/layout_parser.py</Source>
+    <Source>ui_base/touchosc/touchosc_main.py</Source>
+    <Source>ui_base/touchosc/widgets.py</Source>
+    <Source>ui_base/touchosc/__init__.py</Source>
+    <Source>ui_base/gtk/editorbase.py</Source>
+    <Source>ui_base/gtk/osc_tree.py</Source>
+    <Source>ui_base/gtk/gtkBaseUI.py</Source>
+    <Source>ui_base/gtk/childgroup_list.py</Source>
+    <Source>ui_base/gtk/__init__.py</Source>
+    <Source>ui_base/gtk/bases/tree.py</Source>
+    <Source>ui_base/gtk/bases/gtksimple.py</Source>
+    <Source>ui_base/gtk/bases/widgets.py</Source>
+    <Source>ui_base/gtk/bases/clutter_bases.py</Source>
+    <Source>ui_base/gtk/bases/ui_modules.py</Source>
+    <Source>ui_base/gtk/bases/listmodel.py</Source>
+    <Source>ui_base/gtk/bases/propertylist.py</Source>
+    <Source>ui_base/gtk/bases/__init__.py</Source>
+    <Source>ui_base/gtk/views/baseview.py</Source>
+    <Source>ui_base/gtk/views/__init__.py</Source>
+    <Source>ui_base/iOSCControl/widgets.py</Source>
+    <Source>ui_base/iOSCControl/basepage.py</Source>
+    <Source>ui_base/iOSCControl/jsonhandler.py</Source>
+    <Source>ui_base/iOSCControl/iOSCController.py</Source>
+    <Source>ui_base/iOSCControl/pagemenu.py</Source>
+    <Source>ui_base/iOSCControl/sessionselect.py</Source>
+    <Source>ui_base/iOSCControl/__init__.py</Source>
+    <Source>ui_base/qt/qtBaseUI.py</Source>
+    <Source>ui_base/qt/__init__.py</Source>
+    <Source>ui_base/qt/bases/widgets.py</Source>
+    <Source>ui_base/qt/bases/__init__.py</Source>
+    <Source>ui_base/qt/bases/qtsimple.py</Source>
+    <Source>ui_base/kivy/editorbase.py</Source>
+    <Source>ui_base/kivy/kivyBaseUI.py</Source>
+    <Source>ui_base/kivy/__init__.py</Source>
+    <Source>ui_base/kivy/bases/widget_classes.py</Source>
+    <Source>ui_base/kivy/bases/widgets.py</Source>
+    <Source>ui_base/kivy/bases/__init__.py</Source>
+    <Source>ui_base/kivy/views/baseview.py</Source>
+    <Source>ui_base/kivy/views/__init__.py</Source>
+    <Source>gtkui.py</Source>
   </Sources>
   <Forms>
   </Forms>

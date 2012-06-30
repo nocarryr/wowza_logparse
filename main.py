@@ -1,6 +1,10 @@
 import datetime
 import threading
-from Bases import logfileparser
+from Bases import BaseObject, logfileparser
+
+b = BaseObject()
+b.GLOBAL_CONFIG['app_name'] = 'wowza-logparse'
+b.GLOBAL_CONFIG['app_id'] = 'wowza-logparse.app'
 
 class WowzaLogParser(logfileparser.DelimitedFileParser):
     def __init__(self, **kwargs):
@@ -12,7 +16,7 @@ class WowzaLogParser(logfileparser.DelimitedFileParser):
         d = {}
         dt_fmt = '%Y-%m-%d %H:%M:%S'
         for field_index, fields in parsed['fields_by_line'].iteritems():
-            print field_index, fields
+            #print field_index, fields
             dtstr = ' '.join([fields['date'], fields['time']])
             dt = datetime.datetime.strptime(dtstr, dt_fmt)
             d[dt] = fields
@@ -21,9 +25,11 @@ class WowzaLogParser(logfileparser.DelimitedFileParser):
 parser = WowzaLogParser()
 parser.filename = '/home/nocarrier/programs/wowza-logparse/logs/wowzamediaserver_access.log'
 #print parser.parsed['fields_by_key']
-print parser.sorted
-print str(parser.delimiter)
-print 'done'
+#print parser.sorted
+#print str(parser.delimiter)
 
-print threading.enumerate()
-print parser.fileobj
+def run_gtk(**kwargs):
+    from gtkui import run
+    run(**kwargs)
+    
+run_gtk(parser=parser)
