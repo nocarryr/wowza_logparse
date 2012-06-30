@@ -19,7 +19,9 @@ class WowzaLogParser(logfileparser.DelimitedFileParser):
             #print field_index, fields
             dtstr = ' '.join([fields['date'], fields['time']])
             dt = datetime.datetime.strptime(dtstr, dt_fmt)
-            d[dt] = fields
+            fields = fields.copy()
+            fields['datetime'] = dt
+            d[field_index] = fields
         return d
                 
 parser = WowzaLogParser()
