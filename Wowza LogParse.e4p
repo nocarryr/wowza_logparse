@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-4.6.dtd">
 <!-- eric4 project file for project Wowza LogParse -->
-<!-- Saved: 2012-06-30, 09:30:35 -->
+<!-- Saved: 2012-06-30, 11:59:31 -->
 <!-- Copyright (C) 2012 ,  -->
 <Project version="4.6">
   <Language></Language>
@@ -13,6 +13,36 @@
   <Email></Email>
   <Sources>
     <Source>__init__.py</Source>
+    <Source>Bases/masterclock.py</Source>
+    <Source>Bases/color.py</Source>
+    <Source>Bases/garbage_collection.py</Source>
+    <Source>Bases/scheduler.py</Source>
+    <Source>Bases/FileManager.py</Source>
+    <Source>Bases/virtualmoduletree.py</Source>
+    <Source>Bases/jack_dbus.py</Source>
+    <Source>Bases/Serialization.py</Source>
+    <Source>Bases/scaler.py</Source>
+    <Source>Bases/osc_node.py</Source>
+    <Source>Bases/incrementor.py</Source>
+    <Source>Bases/partial.py</Source>
+    <Source>Bases/osc_base.py</Source>
+    <Source>Bases/config.py</Source>
+    <Source>Bases/Properties.py</Source>
+    <Source>Bases/category.py</Source>
+    <Source>Bases/RepeatTimer.py</Source>
+    <Source>Bases/ChildGroup.py</Source>
+    <Source>Bases/timecode.py</Source>
+    <Source>Bases/misc.py</Source>
+    <Source>Bases/logger.py</Source>
+    <Source>Bases/threadbases.py</Source>
+    <Source>Bases/tempo.py</Source>
+    <Source>Bases/BaseObject.py</Source>
+    <Source>Bases/SignalDispatcher.py</Source>
+    <Source>Bases/__init__.py</Source>
+    <Source>Bases/subprocessing.py</Source>
+    <Source>Bases/archive.py</Source>
+    <Source>main.py</Source>
+    <Source>Bases/logfileparser.py</Source>
   </Sources>
   <Forms>
   </Forms>
@@ -24,6 +54,7 @@
   </Interfaces>
   <Others>
   </Others>
+  <MainScript>main.py</MainScript>
   <Vcs>
     <VcsType>PySvn</VcsType>
     <VcsOptions>
