@@ -14,7 +14,8 @@ class MainWindow(gtkBaseUI.BaseWindow):
         self.topwidget = topwidget
         d = self.parser.parsed['fields_by_line']
         lvkwargs = dict(column_names=['index'] + self.parser.field_names, 
-                        list_types=[int] + [str] * len(self.parser.field_names))
+                        list_types=[int] + [str] * len(self.parser.field_names), 
+                        default_sort_column=0)
         self.listview = widgets.TreeList(**lvkwargs)
         self.update_listview()
         topwidget.pack_start(self.listview.topwidget, expand=True)
