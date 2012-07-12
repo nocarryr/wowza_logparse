@@ -27,7 +27,7 @@ class WowzaLogParser(logfileparser.W3CExtendedLogfileParser):
 parser = logfileparser.W3CExtendedLogfileParser(delimiter='tab')
 #parser = logfileparser.W3CExtendedLogfileRollingParser(delimiter='tab')
 path = os.getcwd()
-parser.filename = os.path.join(path, 'logs', 'wowzamediaserver_access.log')
+parser.filename = os.path.join(path, 'logs', 'bigstatslog.log')
 #print parser.parsed['fields_by_key']
 #print parser.sorted
 #print str(parser.delimiter)

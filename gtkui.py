@@ -12,8 +12,7 @@ class MainWindow(gtkBaseUI.BaseWindow):
         self.parser = kwargs.get('parser')
         topwidget = widgets.VBox()
         self.topwidget = topwidget
-        d = self.parser.parsed['fields_by_line']
-        lvkwargs = dict(column_names=['index'] + self.parser.field_names, 
+        lvkwargs = dict(column_names=['id'] + self.parser.field_names, 
                         list_types=[int] + [str] * len(self.parser.field_names), 
                         default_sort_column=0)
         self.listview = widgets.TreeList(**lvkwargs)
@@ -22,11 +21,11 @@ class MainWindow(gtkBaseUI.BaseWindow):
         self.window.add(topwidget)
         self.window.show_all()
     def update_listview(self):
-        d = self.parser.parsed['fields_by_line']
+        d = self.parser.parsed['entries']
         lv = self.listview
         keys = lv.column_names[1:]
-        for i, fields in d.iteritems():
-            lv.update({i:[fields[key] for key in keys]})
+        for i, entry in d.iteritems():
+            lv.update({i:[entry.fields[key] for key in keys]})
             
 def run(**kwargs):
     app = Application(mainwindow_kwargs=kwargs)
