@@ -25,7 +25,7 @@ class MainWindow(gtkBaseUI.BaseWindow):
         lv = self.listview
         keys = lv.column_names[1:]
         for i, entry in d.iteritems():
-            lv.update({i:[entry.fields[key] for key in keys]})
+            lv.update({i:[entry.fields.get(key, lv.list_types[kI]()) for kI, key in enumerate(keys)]})
             
 def run(**kwargs):
     app = Application(mainwindow_kwargs=kwargs)

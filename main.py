@@ -1,6 +1,7 @@
 import os.path
 import argparse
 import tempfile
+import urllib
 import urllib2
 import datetime
 import threading
@@ -10,9 +11,19 @@ b = BaseObject()
 b.GLOBAL_CONFIG['app_name'] = 'wowza-logparse'
 b.GLOBAL_CONFIG['app_id'] = 'wowza-logparse.app'
 
-def get_file_from_url(url):
-    f = urllib2.urlopen(url)
+def get_file_from_url(url, query=None):
+    if query is None:
+        query = {}
+    querystr = urllib.urlencode(query)
+    print 'querystr: ', querystr
+    if len(querystr):
+        url = '?'.join([url, querystr])
+    r = urllib2.Request(url)
+    print r.get_full_url()
+    f = urllib2.urlopen(r)
+    #f = urllib2.urlopen(url, querystr)
     s = f.read()
+    print 'recv: ', s
     f.close()
     fd, filename = tempfile.mkstemp()
     tf = os.fdopen(fd, 'w')
@@ -23,12 +34,33 @@ def get_file_from_url(url):
 p = argparse.ArgumentParser()
 p.add_argument('-f', dest='file', help='Log Filename')
 p.add_argument('-u', dest='url', help='Log URL')
+p.add_argument('-q', dest='query', help='URL Query (key=value)', 
+               action='append')
 args, remaining = p.parse_known_args()
 o = vars(args)
 
 DELETE_FILE = False
+
+def format_query(querystr):
+    if ',' in querystr:
+        l = [s.strip(' ') for s in querystr.split(',')]
+    else:
+        l = [querystr]
+    d = {}
+    for q in l:
+        k, v = [s.strip(' ') for s in q.split('=')]
+        d[k] = v
+    return d
+
 if o['url']:
-    o['file'] = get_file_from_url(o['url'])
+    query = {}
+    if o['query'] is not None:
+        for q in o['query']:
+            query.update(format_query(q))
+            #k, v = [s.strip(' ') for s in q.split('=')]
+            #query[k] = v
+        print 'query: ', query
+    o['file'] = get_file_from_url(o['url'], query)
     DELETE_FILE = True
 
 class WowzaLogParser(logfileparser.W3CExtendedLogfileParser):
@@ -64,3 +96,4 @@ def run_gtk(**kwargs):
     run(**kwargs)
     
 run_gtk(parser=parser)
+    
