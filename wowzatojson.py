@@ -1,6 +1,7 @@
 import os.path
 import datetime
 import json
+import gc
 
 from Bases import BaseObject, Config
 from wowzaparser import WowzaEntry, WowzaLogParser
@@ -56,12 +57,15 @@ class WowzaToJson(BaseObject, Config):
                 new_fn_dt.remove(dt)
         for dt in new_fn_dt:
             fn = fn_by_dt[dt]
+            print 'processing file %s' % (os.path.basename(fn))
             p = WowzaLogParser()
             p.filename = fn
             for key, val in p.get_dict().iteritems():
                 if key not in existing:
                     existing[key] = {}
-                existing[key].update(val)
+                existing[key].update(val.copy())
+            p = None
+            gc.collect()
         kwargs['data'] = existing
         self.write_json(**kwargs)
     def build_filename(self, **kwargs):
