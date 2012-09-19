@@ -1,3 +1,4 @@
+import traceback
 import datetime
 
 from Bases import logfileparser
@@ -17,6 +18,8 @@ class WowzaEntry(logfileparser.DelimitedLogEntry):
                 #t = datetime.time.strptime(self.fields['time'], '%H:%M:%S')
                 self.dt = datetime.datetime.combine(d, t)
             except:
+                traceback.print_exc()
+                print self.id, self.field_list, self.fields, self.data
                 self.dt = None
     def get_dict(self):
         d = super(WowzaEntry, self).get_dict()
