@@ -20,7 +20,7 @@ class WowzaToJson(BaseObject, Config):
         Config.__init__(self, **kwargs)
         self.log_source = os.path.expanduser(self.get_conf('log_source', '~/wmslogs/source'))
         self.output_path = os.path.expanduser(self.get_conf('output_path', '~/wmslogs/json'))
-        self.log_names = self.get_conf('log_names', ['access', 'error', 'stats'])
+        self.log_names = self.get_conf('log_names', ['access', 'stats'])
         for log_name in self.log_names:
             self.process_log(log_name=log_name)
     def sort_logfiles(self, **kwargs):
