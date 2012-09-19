@@ -69,8 +69,8 @@ class WowzaLogParser(logfileparser.W3CExtendedLogfileParser):
         return d
     def build_entry(self, **kwargs):
         e = super(WowzaLogParser, self).build_entry(**kwargs)
-        if getattr(e, 'dt', None) is None and 'line_num' in kwargs:
-            print self.filename, kwargs['line_num'], kwargs['field_names']
+        if getattr(e, 'dt', None) is None and 'field_names' in kwargs:
+            print self.filename, kwargs['id'], kwargs['field_names']
         return e
     def build_sessions(self):
         sessions = self.sessions
