@@ -28,11 +28,11 @@ class WowzaToJson(BaseObject, Config):
         base_dir = self.log_source
         filenames = []
         fn_by_dt = {}
-        for fn in os.listdir(basedir):
+        for fn in os.listdir(base_dir):
             if log_name not in fn:
                 continue
             filenames.append(fn)
-            ts = os.stat(os.path.join(basedir, fn)).st_ctime
+            ts = os.stat(os.path.join(base_dir, fn)).st_ctime
             dt = datetime.datetime.fromtimestamp(ts)
             fn_by_dt[dt] = fn
         filenames.sort()
