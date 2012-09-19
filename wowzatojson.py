@@ -34,7 +34,7 @@ class WowzaToJson(BaseObject, Config):
             filenames.append(fn)
             ts = os.stat(os.path.join(base_dir, fn)).st_ctime
             dt = datetime.datetime.fromtimestamp(ts)
-            fn_by_dt[dt] = fn
+            fn_by_dt[dt] = os.path.join(base_dir, fn)
         filenames.sort()
         filenames.reverse()
         #filenames.remove(log_name)
