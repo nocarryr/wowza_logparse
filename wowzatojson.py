@@ -45,7 +45,10 @@ class WowzaToJson(BaseObject, Config):
         if existing is False:
             existing = {'entries':{}}
         dt_list = [string_to_datetime(key) for key in existing['entries'].keys()]
-        last_dt = max(dt_list)
+        if len(dt_list):
+            last_dt = max(dt_list)
+        else:
+            last_dt = datetime.datetime(1970, 1, 1)
         filenames, fn_by_dt = self.sort_logfiles(**kwargs)
         new_fn_dt = sorted(fn_by_dt.keys())
         for dt in new_fn_dt[:]:
