@@ -65,9 +65,10 @@ class WowzaToJson(BaseObject, Config):
                     existing[key] = {}
                 existing[key].update(val.copy())
             p = None
+            kwargs['data'] = existing
+            self.write_json(**kwargs)
             gc.collect()
-        kwargs['data'] = existing
-        self.write_json(**kwargs)
+        
     def build_filename(self, **kwargs):
         log_name = kwargs.get('log_name')
         fn = '%s.json' % (os.path.join(self.output_path, log_name))
