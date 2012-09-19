@@ -87,5 +87,5 @@ class WowzaLogParser(logfileparser.W3CExtendedLogfileParser):
         d = super(WowzaLogParser, self).get_dict()
         sessions = self.sessions
         #keys = sessions.keys()
-        d['sessions'] = [session.get_dict() for session in sessions]
+        d['sessions'] = dict(zip([s.id for s in sessions], [s.get_dict() for s in sessions]))
         return d
