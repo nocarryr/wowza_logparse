@@ -7,14 +7,17 @@ class WowzaEntry(logfileparser.DelimitedLogEntry):
     def __init__(self, **kwargs):
         super(WowzaEntry, self).__init__(**kwargs)
         if None not in [self.fields.get(key) for key in ['date', 'time']]:
-            ymd = [int(s) for s in self.fields['date'].split('-')]
-            d = datetime.date(*ymd)
-            #d = datetime.date.strptime(self.fields['date'], '%Y-%m-%d')
-            hms = [int(s) for s in self.fields['time'].split(':')]
-            #hms.append(1)
-            t = datetime.time(*hms)
-            #t = datetime.time.strptime(self.fields['time'], '%H:%M:%S')
-            self.dt = datetime.datetime.combine(d, t)
+            try:
+                ymd = [int(s) for s in self.fields['date'].split('-')]
+                d = datetime.date(*ymd)
+                #d = datetime.date.strptime(self.fields['date'], '%Y-%m-%d')
+                hms = [int(s) for s in self.fields['time'].split(':')]
+                #hms.append(1)
+                t = datetime.time(*hms)
+                #t = datetime.time.strptime(self.fields['time'], '%H:%M:%S')
+                self.dt = datetime.datetime.combine(d, t)
+            except:
+                self.dt = None
     def get_dict(self):
         d = super(WowzaEntry, self).get_dict()
         d['id'] = self.id.strftime(self._datetime_fmt_str)
