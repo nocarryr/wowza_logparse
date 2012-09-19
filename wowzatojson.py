@@ -89,7 +89,7 @@ class WowzaToJson(BaseObject, Config):
         data = kwargs.get('data')
         f = open(fn, 'w')
         try:
-            json.dump(data)
+            json.dump(data, f)
         finally:
             f.close()
         
