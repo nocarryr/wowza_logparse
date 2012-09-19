@@ -1,3 +1,4 @@
+import sys
 import os.path
 import datetime
 import json
@@ -90,6 +91,10 @@ class WowzaToJson(BaseObject, Config):
         f = open(fn, 'w')
         try:
             json.dump(data, f)
+        except:
+            traceback.print_exc()
+            print data
+            sys.exit(0)
         finally:
             f.close()
         
