@@ -37,8 +37,8 @@ class WowzaToJson(BaseObject, Config):
             fn_by_dt[dt] = fn
         filenames.sort()
         filenames.reverse()
-        filenames.remove(log_name)
-        filenames = [log_name] + filenames
+        #filenames.remove(log_name)
+        #filenames = [log_name] + filenames
         return filenames, fn_by_dt
     def process_log(self, **kwargs):
         existing = self.parse_json(**kwargs)
