@@ -21,9 +21,11 @@ class WowzaEntry(logfileparser.DelimitedLogEntry):
                 traceback.print_exc()
                 print self.id, self.field_list, self.fields, self.data
                 self.dt = None
+    def dt_to_string(self):
+        return self.dt.strftime(self._datetime_fmt_str)
     def get_dict(self):
         d = super(WowzaEntry, self).get_dict()
-        d['id'] = self.id.strftime(self._datetime_fmt_str)
+        d['id'] = self.dt_to_string()
         return d
         
 class Session(object):
@@ -44,7 +46,7 @@ class Session(object):
                 break
             self.entries[e.id] = e
     def get_dict(self):
-        return {'id':self.id, 'entry_ids':self.entries.keys()}
+        return {'id':self.id, 'entry_ids':[e.dt_to_string() for e in self.entries.values()]}
         
 class WowzaLogParser(logfileparser.W3CExtendedLogfileParser):
     entry_class = WowzaEntry
