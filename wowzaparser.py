@@ -67,6 +67,11 @@ class WowzaLogParser(logfileparser.W3CExtendedLogfileParser):
             by_dt[e.id] = e
         d['entries'] = by_dt
         return d
+    def build_entry(self, **kwargs):
+        e = super(WowzaLogParser, self).build_entry(**kwargs)
+        if e.dt is None:
+            print self.filename, kwargs['line_num'], kwargs['field_names']
+        return e
     def build_sessions(self):
         sessions = self.sessions
         for i, key in enumerate(sorted(self.parsed['entries'].keys())):
