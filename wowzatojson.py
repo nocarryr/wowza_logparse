@@ -130,17 +130,11 @@ class WowzaToJson(BaseObject, Config):
             if dt < last_dt:
                 new_fn_dt.remove(dt)
         print new_fn_dt
-        current_month = min(new_fn_dt).month
-        print current_month
+        #current_month = min(new_fn_dt).month
+        #print current_month
+        current_month = None
         for dt in new_fn_dt:
-            if dt.month != current_month:
-                existing = self.parse_json(log_name=log_name, 
-                                           base_dir=self.output_path, 
-                                           dt=dt)
-                if existing is False:
-                    existing = {'entries':{}}
-                print 'new month %s, old was %s' % (dt.month, current_month)
-                current_month = dt.month
+            
             fn = fn_by_dt[dt]
             print 'processing file %s' % (os.path.basename(fn))
             p = WowzaLogParser()
@@ -150,9 +144,17 @@ class WowzaToJson(BaseObject, Config):
                     existing[key] = {}
                 existing[key].update(val.copy())
             p = None
-            kwargs['data'] = existing
-            kwargs['dt'] = dt
-            self.write_json(**kwargs)
+            if dt.month != current_month:
+                kwargs['data'] = existing
+                kwargs['dt'] = dt
+                self.write_json(**kwargs)
+                existing = self.parse_json(log_name=log_name, 
+                                           base_dir=self.output_path, 
+                                           dt=dt)
+                if existing is False:
+                    existing = {'entries':{}}
+                print 'new month %s, old was %s' % (dt.month, current_month)
+                current_month = dt.month
             gc.collect()
         
     def build_filename(self, **kwargs):
