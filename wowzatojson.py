@@ -19,8 +19,26 @@ def string_to_datetime(s):
     return datetime.datetime.strptime(DT_JSON_STR + DT_FMT_STR)
 class Encoder(json.JSONEncoder):
     def default(self, obj):
-        if isinstance(obj, datetime.datetime):
-            return datetime_to_string(obj)
+        def encode_dt(o):
+            if isinstance(o, datetime.datetime):
+                return datetime_to_string(o)
+            return o
+        if isinstance(obj, dict):
+            newdict = obj.copy()
+            changed = False
+            for key in newdict.keys()[:]:
+                newkey = encode_dt(key)
+                if newkey == key:
+                    continue
+                changed = True
+                val = newdict[key]
+                newdict[newkey] = val
+                del newdict[key]
+            if changed:
+                return newdict
+        newobj = encode_dt(obj)
+        if newobj != obj:
+            return newobj
         return json.JSONEncoder.default(self, obj)
 class Decoder(json.JSONDecoder):
     def __init__(self, **kwargs):
