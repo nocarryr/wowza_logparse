@@ -11,13 +11,43 @@ from wowzaparser import WowzaEntry, WowzaLogParser
 b = BaseObject()
 b.GLOBAL_CONFIG['app_name'] = 'wowza-json'
 
+DT_FMT_STR = WowzaEntry._datetime_fmt_str
+DT_JSON_STR = '<datetime>'
 def datetime_to_string(dt):
-    return dt.strftime(WowzaEntry._datetime_fmt_str)
+    return dt.strftime(DT_JSON_STR + DT_FMT_STR)
 def string_to_datetime(s):
-    return datetime.datetime.strptime(WowzaEntry._datetime_fmt_str)
+    return datetime.datetime.strptime(DT_JSON_STR + DT_FMT_STR)
+class Encoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, datetime.datetime):
+            return datetime_to_string(obj)
+        return json.JSONEncoder.default(self, obj)
+class Decoder(json.JSONDecoder):
+    def __init__(self, **kwargs):
+        kwargs['object_pairs_hook'] = self._look_for_dt
+        json.JSONDecoder.__init__(self, **kwargs)
+    def _look_for_dt(self, parsed):
+        for key in parsed.keys()[:]:
+            val = parsed[key]
+            newkey = None
+            newval = None
+            if isinstance(key, basestring) and DT_JSON_STR in key:
+                newkey = string_to_datetime(key)
+            if isinstance(val, basestring) and DT_JSON_STR in val:
+                newval = string_to_datetime(val)
+            if newval is not None:
+                if newkey is None:
+                    parsed[key] = newval
+                else:
+                    val = newval
+            if newkey is not None:
+                parsed[newkey] = val
+                del parsed[key]
+        return parsed
     
 class WowzaToJson(BaseObject, Config):
     _confsection = 'LOGFILE_LOCATIONS'
+    _jsonfile_dt_fmt_str = '_%Y-%m'
     def __init__(self, **kwargs):
         BaseObject.__init__(self, **kwargs)
         Config.__init__(self, **kwargs)
@@ -28,26 +58,51 @@ class WowzaToJson(BaseObject, Config):
             self.process_log(log_name=log_name)
     def sort_logfiles(self, **kwargs):
         log_name = kwargs.get('log_name')
-        base_dir = self.log_source
+        base_dir = kwargs.get('base_dir', self.log_source)
+        dt_parse_str = kwargs.get('dt_parse_str')
+        def parse_dt_stat(fn):
+            ts = os.stat(fn).st_ctime
+            return datetime.datetime.fromtimestamp(ts)
+        def parse_dt_fmtstr(fn):
+            fn = os.path.splitext(os.path.basename(fn))[0]
+            dtstr = fn.split(log_name)[1]
+            dt = datetime.datetime.strptime(dt_parse_str)
+            return dt
+        if dt_parse_str is None:
+            parse_dt = parse_dt_stat
+        else:
+            parse_dt = parse_dt_fmtstr
         filenames = []
         fn_by_dt = {}
         for fn in os.listdir(base_dir):
             if log_name not in fn:
                 continue
+            full_fn = os.path.join(base_dir, fn)
             filenames.append(fn)
-            ts = os.stat(os.path.join(base_dir, fn)).st_ctime
-            dt = datetime.datetime.fromtimestamp(ts)
-            fn_by_dt[dt] = os.path.join(base_dir, fn)
+            dt = parse_dt(full_fn)
+            fn_by_dt[dt] = full_fn
         filenames.sort()
         filenames.reverse()
         #filenames.remove(log_name)
         #filenames = [log_name] + filenames
         return filenames, fn_by_dt
+    def find_most_recent_file(self, **kwargs):
+        filenames, fn_by_dt = self.sort_logfiles(**kwargs)
+        if not len(fn_by_dt):
+            return False
+        dt = max(fn_by_dt.keys())
+        return dt, fn_by_dt[dt]
     def process_log(self, **kwargs):
-        existing = self.parse_json(**kwargs)
-        if existing is False:
+        log_name = kwargs.get('log_name')
+        last_js_dt = self.find_most_recent_file(log_name=log_name, 
+                                                base_dir=self.output_path, 
+                                                dt_parse_str=self._jsonfile_dt_fmt_str)
+        if last_js_dt is False:
             existing = {'entries':{}}
-        dt_list = [string_to_datetime(key) for key in existing['entries'].keys()]
+        else:
+            existing = self.parse_json(filename=last_js_dt[1])
+        #dt_list = [string_to_datetime(key) for key in existing['entries'].keys()]
+        dt_list = existing['entries'].keys()
         if len(dt_list):
             last_dt = max(dt_list)
         else:
@@ -68,21 +123,31 @@ class WowzaToJson(BaseObject, Config):
                 existing[key].update(val.copy())
             p = None
             kwargs['data'] = existing
+            kwargs['dt'] = dt
             self.write_json(**kwargs)
             gc.collect()
         
     def build_filename(self, **kwargs):
         log_name = kwargs.get('log_name')
-        fn = '%s.json' % (os.path.join(self.output_path, log_name))
+        dt = kwargs.get('dt')
+        if dt is not None:
+            dtstr = dt.strftime(self._jsonfile_dt_fmt_str)
+        else:
+            dtstr = '0'
+        fn = '%s%s.json' % (log_name, dtstr)
+        fn = os.path.join(self.output_path, fn)
+        #fn = '%s.json' % (os.path.join(self.output_path, log_name))
         return fn
     def parse_json(self, **kwargs):
-        fn = self.build_filename(**kwargs)
+        fn = kwargs.get('filename')
+        if fn is None:
+            fn = self.build_filename(**kwargs)
         if not os.path.exists(fn):
             return False
         f = open(fn, 'r')
         d = False
         try:
-            d = json.load(f)
+            d = json.load(f, cls=Decoder)
         finally:
             f.close()
         return d
@@ -91,13 +156,13 @@ class WowzaToJson(BaseObject, Config):
         data = kwargs.get('data')
         f = open(fn, 'w')
         try:
-            json.dump(data, f)
+            json.dump(data, f, cls=Encoder)
         except:
             traceback.print_exc()
             print data
             sys.exit(0)
         finally:
             f.close()
-        
+
 if __name__ == '__main__':
     wj = WowzaToJson()

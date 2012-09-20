@@ -3,30 +3,46 @@ import datetime
 
 from Bases import logfileparser
 
-class WowzaEntry(logfileparser.DelimitedLogEntry):
-    _datetime_fmt_str = '<datetime>%Y-%y-%d %H:%M:%S.%f'
+class WowzaEntry(logfileparser.W3CExtendedLogEntry):
+    _datetime_fmt_str = '%Y-%m-%d %H:%M:%S.%f'
     def __init__(self, **kwargs):
+        self._dt = None
         super(WowzaEntry, self).__init__(**kwargs)
-        if None not in [self.fields.get(key) for key in ['date', 'time']]:
-            try:
-                ymd = [int(s) for s in self.fields['date'].split('-')]
-                d = datetime.date(*ymd)
-                #d = datetime.date.strptime(self.fields['date'], '%Y-%m-%d')
-                hms = [int(s) for s in self.fields['time'].split(':')]
-                #hms.append(1)
-                t = datetime.time(*hms)
-                #t = datetime.time.strptime(self.fields['time'], '%H:%M:%S')
-                self.dt = datetime.datetime.combine(d, t)
-            except:
-                traceback.print_exc()
-                print self.id, self.field_list, self.fields, self.data
-                self.dt = None
-    def dt_to_string(self):
-        return self.dt.strftime(self._datetime_fmt_str)
-    def get_dict(self):
-        d = super(WowzaEntry, self).get_dict()
-        d['id'] = self.dt_to_string()
-        return d
+        dt = self.dt
+    @property
+    def dt(self):
+        if self._dt is not None:
+            return self._dt
+        dt = self._build_dt()
+        self._dt = dt
+        return dt
+    @dt.setter
+    def dt(self, dt):
+        #if dt != self._dt:
+        self._dt = dt
+    def _build_dt(self):
+        if None in [self.fields.get(key) for key in ['date', 'time']]:
+            return None
+        try:
+            ymd = [int(s) for s in self.fields['date'].split('-')]
+            d = datetime.date(*ymd)
+            #d = datetime.date.strptime(self.fields['date'], '%Y-%m-%d')
+            hms = [int(s) for s in self.fields['time'].split(':')]
+            #hms.append(1)
+            t = datetime.time(*hms)
+            #t = datetime.time.strptime(self.fields['time'], '%H:%M:%S')
+            dt = datetime.datetime.combine(d, t)
+        except:
+            #traceback.print_exc()
+            #print self.id, self.field_list, self.fields, self.data
+            dt = None
+        return dt
+    #def dt_to_string(self):
+    #    return self.dt.strftime(self._datetime_fmt_str)
+    #def get_dict(self):
+    #    d = super(WowzaEntry, self).get_dict()
+    #    d['id'] = self.dt_to_string()
+    #    return d
         
 class Session(object):
     def __init__(self, **kwargs):
@@ -46,7 +62,8 @@ class Session(object):
                 break
             self.entries[e.id] = e
     def get_dict(self):
-        return {'id':self.id, 'entry_ids':[e.dt_to_string() for e in self.entries.values()]}
+        #return {'id':self.id, 'entry_ids':[e.dt_to_string() for e in self.entries.values()]}
+        return {'id':self.id, 'entry_ids':[e.id for e in self.entries.values()]}
         
 class WowzaLogParser(logfileparser.W3CExtendedLogfileParser):
     entry_class = WowzaEntry
