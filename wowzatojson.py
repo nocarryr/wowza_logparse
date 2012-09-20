@@ -41,10 +41,16 @@ class Encoder(json.JSONEncoder):
         newobj = encode_dt(obj)
         if newobj != obj:
             return newobj
+        return json.JSONEncoder.default(obj)
+    def encode(self, obj):
         try:
-            newobj = json.JSONEncoder.default(self, obj)
+            newobj = json.JSONEncoder.encode(self, obj)
         except TypeError:
-            newobj = encode_dt(obj)
+            if isinstance(obj, datetime.datetime):
+                newobj = datetime_to_string(obj)
+            else:
+                traceback.print_exc()
+                sys.exit(0)
         return newobj
 class Decoder(json.JSONDecoder):
     def __init__(self, **kwargs):
