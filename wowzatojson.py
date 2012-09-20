@@ -43,6 +43,8 @@ class Decoder(json.JSONDecoder):
         kwargs['object_pairs_hook'] = self._look_for_dt
         json.JSONDecoder.__init__(self, **kwargs)
     def _look_for_dt(self, parsed):
+        if not isinstance(parsed, dict):
+            return parsed
         for key in parsed.keys()[:]:
             val = parsed[key]
             newkey = None
