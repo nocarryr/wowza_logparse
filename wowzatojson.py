@@ -136,6 +136,8 @@ class WowzaToJson(BaseObject, Config):
                                            dt=dt)
                 if existing is False:
                     existing = {'entries':{}}
+                print 'new month %s, old was %s' % (dt.month, current_month)
+                current_month = dt.month
             fn = fn_by_dt[dt]
             print 'processing file %s' % (os.path.basename(fn))
             p = WowzaLogParser()
@@ -176,6 +178,7 @@ class WowzaToJson(BaseObject, Config):
         return d
     def write_json(self, **kwargs):
         fn = self.build_filename(**kwargs)
+        print 'writing to file %s' % (fn)
         data = kwargs.get('data')
         f = open(fn, 'w')
         try:
