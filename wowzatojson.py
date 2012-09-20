@@ -41,7 +41,11 @@ class Encoder(json.JSONEncoder):
         newobj = encode_dt(obj)
         if newobj != obj:
             return newobj
-        return json.JSONEncoder.default(self, obj)
+        try:
+            newobj = json.JSONEncoder.default(self, obj)
+        except TypeError:
+            newobj = encode_dt(obj)
+        return newobj
 class Decoder(json.JSONDecoder):
     def __init__(self, **kwargs):
         kwargs['object_pairs_hook'] = self._look_for_dt
@@ -179,7 +183,7 @@ class WowzaToJson(BaseObject, Config):
             json.dump(data, f, cls=Encoder)
         except:
             traceback.print_exc()
-            print data
+            #print data
             sys.exit(0)
         finally:
             f.close()
