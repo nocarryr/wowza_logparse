@@ -21,7 +21,8 @@ class Encoder(json.JSONEncoder):
     def default(self, obj):
         def encode_dt(o):
             if isinstance(o, datetime.datetime):
-                return datetime_to_string(o)
+                s = datetime_to_string(o)
+                print 'converting %s to string, "%s"' % (o, s)
             return o
         if isinstance(obj, dict):
             newdict = obj.copy()
@@ -30,6 +31,7 @@ class Encoder(json.JSONEncoder):
                 newkey = encode_dt(key)
                 if newkey == key:
                     continue
+                print 'converting dtkey %s to "%s"' % (key, newkey)
                 changed = True
                 val = newdict[key]
                 newdict[newkey] = val
