@@ -38,9 +38,11 @@ class Encoder(json.JSONEncoder):
                 del newdict[key]
             if changed:
                 return newdict
-        newobj = encode_dt(obj)
-        if newobj != obj:
-            return newobj
+        #newobj = encode_dt(obj)
+        #if newobj != obj:
+        #    return newobj
+        if isinstance(obj, datetime.datetime):
+            return datetime_to_string(obj)
         return json.JSONEncoder.default(obj)
     def encode(self, obj):
         try:
