@@ -128,7 +128,14 @@ class WowzaToJson(BaseObject, Config):
         for dt in new_fn_dt[:]:
             if dt < last_dt:
                 new_fn_dt.remove(dt)
+        current_month = min(new_fn_dt).month
         for dt in new_fn_dt:
+            if dt.month != current_month:
+                existing = self.parse_json(log_name=log_name, 
+                                           base_dir=self.output_path, 
+                                           dt=dt)
+                if existing is False:
+                    existing = {'entries':{}}
             fn = fn_by_dt[dt]
             print 'processing file %s' % (os.path.basename(fn))
             p = WowzaLogParser()
