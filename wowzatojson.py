@@ -125,10 +125,13 @@ class WowzaToJson(BaseObject, Config):
             last_dt = datetime.datetime(1970, 1, 1)
         filenames, fn_by_dt = self.sort_logfiles(**kwargs)
         new_fn_dt = sorted(fn_by_dt.keys())
+        print new_fn_dt
         for dt in new_fn_dt[:]:
             if dt < last_dt:
                 new_fn_dt.remove(dt)
+        print new_fn_dt
         current_month = min(new_fn_dt).month
+        print current_month
         for dt in new_fn_dt:
             if dt.month != current_month:
                 existing = self.parse_json(log_name=log_name, 
