@@ -77,7 +77,7 @@ class WowzaToJson(BaseObject, Config):
         base_dir = kwargs.get('base_dir', self.log_source)
         dt_parse_str = kwargs.get('dt_parse_str')
         def parse_dt_stat(fn):
-            ts = os.stat(fn).st_ctime
+            ts = os.stat(fn).st_mtime
             return datetime.datetime.fromtimestamp(ts)
         def parse_dt_fmtstr(fn):
             fn = os.path.splitext(os.path.basename(fn))[0]
