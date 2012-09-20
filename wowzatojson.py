@@ -19,41 +19,25 @@ def string_to_datetime(s):
     return datetime.datetime.strptime(DT_JSON_STR + DT_FMT_STR)
 class Encoder(json.JSONEncoder):
     def default(self, obj):
-        def encode_dt(o):
-            if isinstance(o, datetime.datetime):
-                s = datetime_to_string(o)
-                print 'converting %s to string, "%s"' % (o, s)
-            return o
+        if isinstance(obj, datetime.datetime):
+            return datetime_to_string(obj)
+        return json.JSONEncoder.default(obj)
+    def iterencode(self, obj, _one_shot=False):
         if isinstance(obj, dict):
             newdict = obj.copy()
             changed = False
             for key in newdict.keys()[:]:
-                newkey = encode_dt(key)
-                if newkey == key:
+                if not isinstance(key, datetime.datetime):
                     continue
+                newkey = datetime_to_string(key)
                 print 'converting dtkey %s to "%s"' % (key, newkey)
                 changed = True
                 val = newdict[key]
                 newdict[newkey] = val
                 del newdict[key]
             if changed:
-                return newdict
-        #newobj = encode_dt(obj)
-        #if newobj != obj:
-        #    return newobj
-        if isinstance(obj, datetime.datetime):
-            return datetime_to_string(obj)
-        return json.JSONEncoder.default(obj)
-    def encode(self, obj):
-        try:
-            newobj = json.JSONEncoder.encode(self, obj)
-        except TypeError:
-            if isinstance(obj, datetime.datetime):
-                newobj = datetime_to_string(obj)
-            else:
-                traceback.print_exc()
-                sys.exit(0)
-        return newobj
+                obj = newdict
+        return json.JSONEncoder.iterencode(self, obj, _one_shot)
 class Decoder(json.JSONDecoder):
     def __init__(self, **kwargs):
         kwargs['object_pairs_hook'] = self._look_for_dt
