@@ -132,7 +132,7 @@ class WowzaToJson(BaseObject, Config):
         print new_fn_dt
         #current_month = min(new_fn_dt).month
         #print current_month
-        current_month = None
+        last_dt = None
         for dt in new_fn_dt:
             
             fn = fn_by_dt[dt]
@@ -144,17 +144,18 @@ class WowzaToJson(BaseObject, Config):
                     existing[key] = {}
                 existing[key].update(val.copy())
             p = None
-            if dt.month != current_month:
-                kwargs['data'] = existing
-                kwargs['dt'] = dt
-                self.write_json(**kwargs)
+            if dt.month != getattr(last_dt, 'month', None):
+                if last_dt is not None:
+                    kwargs['data'] = existing
+                    kwargs['dt'] = last_dt
+                    self.write_json(**kwargs)
                 existing = self.parse_json(log_name=log_name, 
                                            base_dir=self.output_path, 
                                            dt=dt)
                 if existing is False:
                     existing = {'entries':{}}
-                print 'new month %s, old was %s' % (dt.month, current_month)
-                current_month = dt.month
+                print 'new month %s, old was %s' % (dt.month, getattr(last_dt, 'month', None))
+                last_dt = dt
             gc.collect()
         
     def build_filename(self, **kwargs):
