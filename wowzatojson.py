@@ -82,7 +82,7 @@ class WowzaToJson(BaseObject, Config):
         def parse_dt_fmtstr(fn):
             fn = os.path.splitext(os.path.basename(fn))[0]
             dtstr = fn.split(log_name)[1]
-            dt = datetime.datetime.strptime(dt_parse_str)
+            dt = datetime.datetime.strptime(dtstr, dt_parse_str)
             return dt
         if dt_parse_str is None:
             parse_dt = parse_dt_stat
