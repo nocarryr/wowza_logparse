@@ -25,7 +25,7 @@ def get_file_from_url(url, query=None):
     f = urllib2.urlopen(r)
     #f = urllib2.urlopen(url, querystr)
     s = f.read()
-    print 'recv: ', s
+    #print 'recv: ', s
     f.close()
     fd, filename = tempfile.mkstemp()
     tf = os.fdopen(fd, 'w')
@@ -80,9 +80,12 @@ if DELETE_FILE:
 #print parser.sorted
 #print str(parser.delimiter)
 
+def get_parser():
+    return parser
 def run_gtk(**kwargs):
     from gtkui import run
     run(**kwargs)
     
-run_gtk(parser=parser)
+if __name__ == '__main__':
+    run_gtk(parser=parser)
     
