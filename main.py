@@ -7,7 +7,7 @@ import datetime
 import threading
 from Bases import BaseObject, logfileparser
 
-from wowzaparser import WowzaLogParser
+from wowzaparser import WowzaLogParser, parse_filename_dt
 
 b = BaseObject()
 b.GLOBAL_CONFIG['app_name'] = 'wowza-logparse'

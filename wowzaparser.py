@@ -3,6 +3,16 @@ import datetime
 
 from Bases import logfileparser
 
+LOGFILE_DATETIME_FMT_STR = '%Y-%m-%d %H:%M:%S.%f'
+
+def parse_filename_dt(filename):
+    if 'log.' in filename:
+        filename = filename.split('log.')[1]
+    filename += ' 11:59:59.99999'
+    dt = datetime.datetime.strptime(filename, LOGFILE_DATETIME_FMT_STR)
+    return dt
+    
+    
 class WowzaEntry(logfileparser.W3CExtendedLogEntry):
     _datetime_fmt_str = '%Y-%m-%d %H:%M:%S.%f'
     def __init__(self, **kwargs):
