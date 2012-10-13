@@ -90,6 +90,7 @@ class WowzaLogParser(logfileparser.W3CExtendedLogfileParser):
         td = datetime.timedelta(microseconds=1)
         for i in sorted(d['entries'].keys()):
             e = d['entries'][i]
+            e.dt += td
             while e.dt in by_dt:
                 e.dt += td
             e.id = e.dt
