@@ -106,13 +106,13 @@ class WowzaLogParser(logfileparser.W3CExtendedLogfileParser):
         sessions = self.sessions
         for i, key in enumerate(sorted(self.parsed['entries'].keys())):
             e = self.parsed['entries'][key]
-            if e.fields['x-category'] != 'session':
-                continue
             if e.fields['x-event'] != 'connect':
                 continue
-            s = Session(start_entry=e, start_index=i, parser=self)
-            #d[s.id] = s
-            sessions.append(s)
+            cat = e.fields['x-category']
+            if cat == 'session' or cat == 'cupertino':
+                s = Session(start_entry=e, start_index=i, parser=self)
+                #d[s.id] = s
+                sessions.append(s)
     def get_dict(self):
         d = super(WowzaLogParser, self).get_dict()
         sessions = self.sessions
