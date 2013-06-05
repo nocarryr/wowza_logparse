@@ -27,7 +27,9 @@ class WowzaEntry(logfileparser.W3CExtendedLogEntry):
         return self.datetime
     @dt.setter
     def dt(self, dt):
-        if self.datetime_utc is not None:
+        if self.is_utc:
+            self.datetime_utc = self.datetime = dt
+        elif self.datetime_utc is not None:
             self.datetime_utc = dt
             self.datetime = self.tzinfo.normalize(dt)
         else:
