@@ -41,7 +41,7 @@ def get_file_from_url(url, query=None):
 #parser = logfileparser.W3CExtendedLogfileParser(delimiter='tab')
 def build_parser(filename, delete_file=False, **kwargs):
     kwargs.setdefault('delimiter', 'tab')
-    parser = WowzaLogParser(delimiter='tab')
+    parser = WowzaLogParser(**kwargs)
     parser.filename = filename
     if delete_file:
         os.remove(filename)
