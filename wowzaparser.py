@@ -90,7 +90,7 @@ class WowzaLogParser(logfileparser.W3CExtendedLogfileParser):
         d['entries'] = by_dt
         return d
     def build_entry(self, validate=False, **kwargs):
-        e = super(WowzaLogParser, self).build_entry(**kwargs)
+        e = super(WowzaLogParser, self).build_entry(validate, **kwargs)
         if not e:
             return e
         if getattr(e, 'dt', None) is None and 'field_names' in kwargs:
