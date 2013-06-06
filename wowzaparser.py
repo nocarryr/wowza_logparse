@@ -89,8 +89,10 @@ class WowzaLogParser(logfileparser.W3CExtendedLogfileParser):
             by_dt[e.id] = e
         d['entries'] = by_dt
         return d
-    def build_entry(self, **kwargs):
+    def build_entry(self, validate=False, **kwargs):
         e = super(WowzaLogParser, self).build_entry(**kwargs)
+        if not e:
+            return e
         if getattr(e, 'dt', None) is None and 'field_names' in kwargs:
             print self.filename, kwargs['id'], kwargs['field_names']
         return e
