@@ -84,10 +84,10 @@ class WowzaLogParser(logfileparser.W3CExtendedLogfileParser):
         return e
     def build_sessions(self):
         sessions = self.sessions
-        session_to_process = set()
+        sessions_to_process = set()
         to_remove = set()
         by_dt = self.parsed['entries_by_dt']
-        for dt, e in by_dt.iter_flat():
+        for e in by_dt.iter_flat():
             for s in sessions_to_process:
                 r = s.process_entry(e)
                 if r is False:
