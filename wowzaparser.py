@@ -16,24 +16,10 @@ def parse_filename_dt(filename):
 class WowzaEntry(logfileparser.W3CExtendedLogEntry):
     _datetime_fmt_str = '%Y-%m-%d %H:%M:%S.%f %z'
     def __init__(self, **kwargs):
-        self._dt = None
         super(WowzaEntry, self).__init__(**kwargs)
-        dt = self.dt
     @property
     def dt(self):
-        dtutc = self.datetime_utc
-        if dtutc is not None:
-            return dtutc
-        return self.datetime
-    @dt.setter
-    def dt(self, dt):
-        if self.is_utc:
-            self.datetime_utc = self.datetime = dt
-        elif self.datetime_utc is not None:
-            self.datetime_utc = dt
-            self.datetime = self.tzinfo.normalize(dt)
-        else:
-            self.datetime = dt
+        return self.indexed_datetime
     def dt_to_string(self):
         return self.dt.strftime(self._datetime_fmt_str)
     def get_dict(self):
@@ -44,22 +30,22 @@ class WowzaEntry(logfileparser.W3CExtendedLogEntry):
 class Session(object):
     def __init__(self, **kwargs):
         self.start_entry = kwargs.get('start_entry')
-        start_index = kwargs.get('start_index')
         self.parser = kwargs.get('parser')
         self.id = self.start_entry.fields['c-client-id']
-        d = self.parser.parsed['entries']
-        keys = sorted(d.keys())
-        self.entries = {}
-        for key in keys[start_index:]:
-            e = d[key]
-            if e.fields['c-client-id'] != self.id:
-                continue
-            if e.fields['x-event'] == 'disconnect':
-                self.end_entry = e
-                break
-            self.entries[e.id] = e
+        self.entries = []
+        self.is_complete = False
+    def process_entry(self, entry):
+        if self.is_complete:
+            return False
+        if entry.fields['c-client-id'] == self.id:
+            if entry.fields['x-event'] == 'disconnect':
+                self.end_entry = entry
+                self.is_complete = True
+                return False
+            self.entries.append(entry)
+        return True
     def get_dict(self):
-        return {'id':self.id, 'entry_ids':[e.dt_to_string() for e in self.entries.values()]}
+        return {'id':self.id, 'entry_ids':[e.dt_to_string() for e in self.entries]}
         #return {'id':self.id, 'entry_ids':[e.id for e in self.entries.values()]}
         
 class WowzaLogParser(logfileparser.W3CExtendedLogfileParser):
@@ -72,23 +58,23 @@ class WowzaLogParser(logfileparser.W3CExtendedLogfileParser):
     def parse_file(self, **kwargs):
         super(WowzaLogParser, self).parse_file(**kwargs)
         self.build_sessions()
-    def do_parse(self, **kwargs):
-        d = super(WowzaLogParser, self).do_parse(**kwargs)
-        by_dt = {}
-        td = datetime.timedelta(microseconds=1)
-        use_utc = self.use_utc
-        for i in sorted(d['entries'].keys()):
-            e = d['entries'][i]
-            e.dt += td
-            while e.dt in by_dt:
-                e.dt += td
-            if use_utc:
-                e.id = e.dt
-            else:
-                e.id = e.datetime
-            by_dt[e.id] = e
-        d['entries'] = by_dt
-        return d
+#    def do_parse(self, **kwargs):
+#        d = super(WowzaLogParser, self).do_parse(**kwargs)
+#        by_dt = {}
+#        td = datetime.timedelta(microseconds=1)
+#        use_utc = self.use_utc
+#        for i in sorted(d['entries'].keys()):
+#            e = d['entries'][i]
+#            e.dt += td
+#            while e.dt in by_dt:
+#                e.dt += td
+#            if use_utc:
+#                e.id = e.dt
+#            else:
+#                e.id = e.datetime
+#            by_dt[e.id] = e
+#        d['entries'] = by_dt
+#        return d
     def build_entry(self, validate=False, **kwargs):
         e = super(WowzaLogParser, self).build_entry(validate, **kwargs)
         if not e:
@@ -98,15 +84,25 @@ class WowzaLogParser(logfileparser.W3CExtendedLogfileParser):
         return e
     def build_sessions(self):
         sessions = self.sessions
-        for i, key in enumerate(sorted(self.parsed['entries'].keys())):
-            e = self.parsed['entries'][key]
+        session_to_process = set()
+        to_remove = set()
+        by_dt = self.parsed['entries_by_dt']
+        for dt, e in by_dt.iter_flat():
+            for s in sessions_to_process:
+                r = s.process_entry(e)
+                if r is False:
+                    to_remove.add(s)
+            for s in to_remove:
+                sessions_to_process.discard(s)
+            to_remove.clear()
             if e.fields['x-event'] != 'connect':
                 continue
             cat = e.fields['x-category']
             if cat == 'session' or cat == 'cupertino':
-                s = Session(start_entry=e, start_index=i, parser=self)
+                s = Session(start_entry=e, parser=self)
                 #d[s.id] = s
                 sessions.append(s)
+                sessions_to_process.add(s)
     def get_dict(self):
         d = super(WowzaLogParser, self).get_dict()
         sessions = self.sessions
