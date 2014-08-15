@@ -53,11 +53,13 @@ class WowzaLogParser(logfileparser.W3CExtendedLogfileParser):
     def __init__(self, **kwargs):
         kwargs.setdefault('delimiter', 'tab')
         super(WowzaLogParser, self).__init__(**kwargs)
+        self.enable_sessions = kwargs.get('enable_sessions', True)
         self.use_utc = kwargs.get('use_utc', True)
         self.sessions = []
     def parse_file(self, **kwargs):
         super(WowzaLogParser, self).parse_file(**kwargs)
-        self.build_sessions()
+        if self.enable_sessions:
+            self.build_sessions()
 #    def do_parse(self, **kwargs):
 #        d = super(WowzaLogParser, self).do_parse(**kwargs)
 #        by_dt = {}
