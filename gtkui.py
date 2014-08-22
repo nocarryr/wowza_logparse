@@ -86,8 +86,7 @@ class SessionParentNode(object):
         row = [self.session.id] + [''] * len(self.parent.parser.field_names)
         self.iter = self.store.append(self.parent.iter, row)
         self.nodes = []
-        for dt in sorted(self.session.entries.keys()):
-            e = self.session.entries[dt]
+        for e in self.session.entries:
             self.nodes.append(SessionEntryNode(parent=self, entry=e))
 class SessionEntryNode(object):
     def __init__(self, **kwargs):
