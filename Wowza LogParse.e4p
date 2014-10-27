@@ -1,119 +1,223 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE Project SYSTEM "Project-4.6.dtd">
-<!-- eric4 project file for project Wowza LogParse -->
-<!-- Saved: 2012-09-19, 12:10:52 -->
-<!-- Copyright (C) 2012 ,  -->
-<Project version="4.6">
+<!DOCTYPE Project SYSTEM "Project-5.1.dtd">
+<!-- eric5 project file for project Wowza LogParse -->
+<!-- Saved: 2014-10-27, 14:45:13 -->
+<!-- Copyright (C) 2014 ,  -->
+<Project version="5.1">
   <Language></Language>
-  <ProgLanguage mixed="0">Python</ProgLanguage>
+  <Hash>04af80128055c90129b32afba5f35dbdd6bd87d8</Hash>
+  <ProgLanguage mixed="0">Python2</ProgLanguage>
   <ProjectType>Console</ProjectType>
   <Description></Description>
   <Version>0.1</Version>
   <Author></Author>
   <Email></Email>
+  <Eol index="-1"/>
   <Sources>
     <Source>__init__.py</Source>
-    <Source>Bases/masterclock.py</Source>
-    <Source>Bases/color.py</Source>
-    <Source>Bases/garbage_collection.py</Source>
-    <Source>Bases/scheduler.py</Source>
-    <Source>Bases/FileManager.py</Source>
-    <Source>Bases/virtualmoduletree.py</Source>
-    <Source>Bases/jack_dbus.py</Source>
-    <Source>Bases/Serialization.py</Source>
-    <Source>Bases/scaler.py</Source>
-    <Source>Bases/osc_node.py</Source>
-    <Source>Bases/incrementor.py</Source>
-    <Source>Bases/partial.py</Source>
-    <Source>Bases/osc_base.py</Source>
-    <Source>Bases/config.py</Source>
-    <Source>Bases/Properties.py</Source>
-    <Source>Bases/category.py</Source>
-    <Source>Bases/RepeatTimer.py</Source>
-    <Source>Bases/ChildGroup.py</Source>
-    <Source>Bases/timecode.py</Source>
-    <Source>Bases/misc.py</Source>
-    <Source>Bases/logger.py</Source>
-    <Source>Bases/threadbases.py</Source>
-    <Source>Bases/tempo.py</Source>
-    <Source>Bases/BaseObject.py</Source>
-    <Source>Bases/SignalDispatcher.py</Source>
-    <Source>Bases/__init__.py</Source>
-    <Source>Bases/subprocessing.py</Source>
-    <Source>Bases/archive.py</Source>
     <Source>main.py</Source>
-    <Source>Bases/logfileparser.py</Source>
-    <Source>ui_base/BaseUI.py</Source>
-    <Source>ui_base/__init__.py</Source>
-    <Source>ui_base/bases/widgets.py</Source>
-    <Source>ui_base/bases/simple.py</Source>
-    <Source>ui_base/bases/__init__.py</Source>
-    <Source>ui_base/fltk/fltkBaseUI.py</Source>
-    <Source>ui_base/fltk/__init__.py</Source>
-    <Source>ui_base/fltk/bases/widgets.py</Source>
-    <Source>ui_base/fltk/bases/fltksimple.py</Source>
-    <Source>ui_base/fltk/bases/ui_modules.py</Source>
-    <Source>ui_base/fltk/bases/__init__.py</Source>
-    <Source>ui_base/touchosc/layout_parser.py</Source>
-    <Source>ui_base/touchosc/touchosc_main.py</Source>
-    <Source>ui_base/touchosc/widgets.py</Source>
-    <Source>ui_base/touchosc/__init__.py</Source>
-    <Source>ui_base/gtk/editorbase.py</Source>
-    <Source>ui_base/gtk/osc_tree.py</Source>
-    <Source>ui_base/gtk/gtkBaseUI.py</Source>
-    <Source>ui_base/gtk/childgroup_list.py</Source>
-    <Source>ui_base/gtk/__init__.py</Source>
-    <Source>ui_base/gtk/bases/tree.py</Source>
-    <Source>ui_base/gtk/bases/gtksimple.py</Source>
-    <Source>ui_base/gtk/bases/widgets.py</Source>
-    <Source>ui_base/gtk/bases/clutter_bases.py</Source>
-    <Source>ui_base/gtk/bases/ui_modules.py</Source>
-    <Source>ui_base/gtk/bases/listmodel.py</Source>
-    <Source>ui_base/gtk/bases/propertylist.py</Source>
-    <Source>ui_base/gtk/bases/__init__.py</Source>
-    <Source>ui_base/gtk/views/baseview.py</Source>
-    <Source>ui_base/gtk/views/__init__.py</Source>
-    <Source>ui_base/iOSCControl/widgets.py</Source>
-    <Source>ui_base/iOSCControl/basepage.py</Source>
-    <Source>ui_base/iOSCControl/jsonhandler.py</Source>
-    <Source>ui_base/iOSCControl/iOSCController.py</Source>
-    <Source>ui_base/iOSCControl/pagemenu.py</Source>
-    <Source>ui_base/iOSCControl/sessionselect.py</Source>
-    <Source>ui_base/iOSCControl/__init__.py</Source>
-    <Source>ui_base/qt/qtBaseUI.py</Source>
-    <Source>ui_base/qt/__init__.py</Source>
-    <Source>ui_base/qt/bases/widgets.py</Source>
-    <Source>ui_base/qt/bases/__init__.py</Source>
-    <Source>ui_base/qt/bases/qtsimple.py</Source>
-    <Source>ui_base/kivy/editorbase.py</Source>
-    <Source>ui_base/kivy/kivyBaseUI.py</Source>
-    <Source>ui_base/kivy/__init__.py</Source>
-    <Source>ui_base/kivy/bases/widget_classes.py</Source>
-    <Source>ui_base/kivy/bases/widgets.py</Source>
-    <Source>ui_base/kivy/bases/__init__.py</Source>
-    <Source>ui_base/kivy/views/baseview.py</Source>
-    <Source>ui_base/kivy/views/__init__.py</Source>
     <Source>gtkui.py</Source>
-    <Source>web/__init__.py</Source>
-    <Source>web/cgi/getlog.py</Source>
-    <Source>web/cgi/__init__.py</Source>
     <Source>wowzaparser.py</Source>
     <Source>wowzatojson.py</Source>
+    <Source>nomadic_recording_lib/tests.py</Source>
+    <Source>nomadic_recording_lib/comm/BaseIO.py</Source>
+    <Source>nomadic_recording_lib/comm/CommDispatcher.py</Source>
+    <Source>nomadic_recording_lib/comm/__init__.py</Source>
+    <Source>nomadic_recording_lib/comm/remote_console/server.py</Source>
+    <Source>nomadic_recording_lib/comm/remote_console/client.py</Source>
+    <Source>nomadic_recording_lib/comm/remote_console/__init__.py</Source>
+    <Source>nomadic_recording_lib/comm/osc/osc_io.py</Source>
+    <Source>nomadic_recording_lib/comm/osc/osc_sender.py</Source>
+    <Source>nomadic_recording_lib/comm/osc/osc_receiver.py</Source>
+    <Source>nomadic_recording_lib/comm/osc/osc_client.py</Source>
+    <Source>nomadic_recording_lib/comm/osc/osc_terminal.py</Source>
+    <Source>nomadic_recording_lib/comm/osc/messages.py</Source>
+    <Source>nomadic_recording_lib/comm/osc/oscmanager.py</Source>
+    <Source>nomadic_recording_lib/comm/osc/osc_node.py</Source>
+    <Source>nomadic_recording_lib/comm/osc/__init__.py</Source>
+    <Source>nomadic_recording_lib/comm/dmx/ola_client_wrapper.py</Source>
+    <Source>nomadic_recording_lib/comm/dmx/usb_pro.py</Source>
+    <Source>nomadic_recording_lib/comm/dmx/OSCtoOLA.py</Source>
+    <Source>nomadic_recording_lib/comm/dmx/ola_IO.py</Source>
+    <Source>nomadic_recording_lib/comm/dmx/NetlinxDMX.py</Source>
+    <Source>nomadic_recording_lib/comm/dmx/__init__.py</Source>
+    <Source>nomadic_recording_lib/comm/dmx/artnet/manager.py</Source>
+    <Source>nomadic_recording_lib/comm/dmx/artnet/messages.py</Source>
+    <Source>nomadic_recording_lib/comm/dmx/artnet/communication.py</Source>
+    <Source>nomadic_recording_lib/comm/dmx/artnet/fields.py</Source>
+    <Source>nomadic_recording_lib/comm/dmx/artnet/__init__.py</Source>
+    <Source>nomadic_recording_lib/comm/midi/pygame_midiIO.py</Source>
+    <Source>nomadic_recording_lib/comm/midi/rtmidi_midiIO.py</Source>
+    <Source>nomadic_recording_lib/comm/midi/pyportmidi_midiIO.py</Source>
+    <Source>nomadic_recording_lib/comm/midi/mapper.py</Source>
+    <Source>nomadic_recording_lib/comm/midi/mapobjects.py</Source>
+    <Source>nomadic_recording_lib/comm/midi/midi_io.py</Source>
+    <Source>nomadic_recording_lib/comm/midi/messages.py</Source>
+    <Source>nomadic_recording_lib/comm/midi/midi_osc.py</Source>
+    <Source>nomadic_recording_lib/comm/midi/__init__.py</Source>
+    <Source>nomadic_recording_lib/comm/midi/portmidizero_midiIO.py</Source>
+    <Source>nomadic_recording_lib/comm/interprocess/pybonjour_browsepublish.py</Source>
+    <Source>nomadic_recording_lib/comm/interprocess/message_queue.py</Source>
+    <Source>nomadic_recording_lib/comm/interprocess/__init__.py</Source>
+    <Source>nomadic_recording_lib/comm/interprocess/ServiceConnector.py</Source>
+    <Source>nomadic_recording_lib/comm/interprocess/SystemData.py</Source>
+    <Source>nomadic_recording_lib/gsthelpers/rtpbin.py</Source>
+    <Source>nomadic_recording_lib/gsthelpers/base.py</Source>
+    <Source>nomadic_recording_lib/gsthelpers/launchers.py</Source>
+    <Source>nomadic_recording_lib/gsthelpers/__init__.py</Source>
+    <Source>nomadic_recording_lib/gsthelpers/bin.py</Source>
+    <Source>nomadic_recording_lib/gsthelpers/pipeline.py</Source>
+    <Source>nomadic_recording_lib/gsthelpers/element.py</Source>
+    <Source>nomadic_recording_lib/Bases/scheduler.py</Source>
+    <Source>nomadic_recording_lib/Bases/masterclock.py</Source>
+    <Source>nomadic_recording_lib/Bases/threadbases.py</Source>
+    <Source>nomadic_recording_lib/Bases/jack_dbus.py</Source>
+    <Source>nomadic_recording_lib/Bases/timecode.py</Source>
+    <Source>nomadic_recording_lib/Bases/ChildGroup.py</Source>
+    <Source>nomadic_recording_lib/Bases/Properties.py</Source>
+    <Source>nomadic_recording_lib/Bases/config.py</Source>
+    <Source>nomadic_recording_lib/Bases/logfileparser.py</Source>
+    <Source>nomadic_recording_lib/Bases/incrementor.py</Source>
+    <Source>nomadic_recording_lib/Bases/scaler.py</Source>
+    <Source>nomadic_recording_lib/Bases/misc.py</Source>
+    <Source>nomadic_recording_lib/Bases/archive.py</Source>
+    <Source>nomadic_recording_lib/Bases/tempo.py</Source>
+    <Source>nomadic_recording_lib/Bases/Serialization.py</Source>
+    <Source>nomadic_recording_lib/Bases/FileManager.py</Source>
+    <Source>nomadic_recording_lib/Bases/category.py</Source>
+    <Source>nomadic_recording_lib/Bases/RepeatTimer.py</Source>
+    <Source>nomadic_recording_lib/Bases/humanbyte.py</Source>
+    <Source>nomadic_recording_lib/Bases/actiontree.py</Source>
+    <Source>nomadic_recording_lib/Bases/partial.py</Source>
+    <Source>nomadic_recording_lib/Bases/osc_node.py</Source>
+    <Source>nomadic_recording_lib/Bases/SignalDispatcher.py</Source>
+    <Source>nomadic_recording_lib/Bases/garbage_collection.py</Source>
+    <Source>nomadic_recording_lib/Bases/virtualmoduletree.py</Source>
+    <Source>nomadic_recording_lib/Bases/subprocessing.py</Source>
+    <Source>nomadic_recording_lib/Bases/logger.py</Source>
+    <Source>nomadic_recording_lib/Bases/osc_base.py</Source>
+    <Source>nomadic_recording_lib/Bases/color.py</Source>
+    <Source>nomadic_recording_lib/Bases/__init__.py</Source>
+    <Source>nomadic_recording_lib/Bases/BaseObject.py</Source>
+    <Source>nomadic_recording_lib/misc_scripts/dir_watcher.py</Source>
+    <Source>nomadic_recording_lib/misc_scripts/freemind_parser.py</Source>
+    <Source>nomadic_recording_lib/misc_scripts/dyn_aws.py</Source>
+    <Source>nomadic_recording_lib/misc_scripts/convert_f4v.py</Source>
+    <Source>nomadic_recording_lib/misc_scripts/__init__.py</Source>
+    <Source>nomadic_recording_lib/misc_scripts/engenius_controller/cli_commands.py</Source>
+    <Source>nomadic_recording_lib/misc_scripts/engenius_controller/telnet_io.py</Source>
+    <Source>nomadic_recording_lib/misc_scripts/engenius_controller/conf.py</Source>
+    <Source>nomadic_recording_lib/misc_scripts/engenius_controller/__init__.py</Source>
+    <Source>nomadic_recording_lib/misc_scripts/engenius_controller/cli_messages.py</Source>
+    <Source>nomadic_recording_lib/ui/BaseUI.py</Source>
+    <Source>nomadic_recording_lib/ui/__init__.py</Source>
+    <Source>nomadic_recording_lib/ui/gtk/osc_tree.py</Source>
+    <Source>nomadic_recording_lib/ui/gtk/gtkBaseUI.py</Source>
+    <Source>nomadic_recording_lib/ui/gtk/editorbase.py</Source>
+    <Source>nomadic_recording_lib/ui/gtk/__init__.py</Source>
+    <Source>nomadic_recording_lib/ui/gtk/childgroup_list.py</Source>
+    <Source>nomadic_recording_lib/ui/gtk/views/baseview.py</Source>
+    <Source>nomadic_recording_lib/ui/gtk/views/__init__.py</Source>
+    <Source>nomadic_recording_lib/ui/gtk/bases/widgets.py</Source>
+    <Source>nomadic_recording_lib/ui/gtk/bases/gtksimple.py</Source>
+    <Source>nomadic_recording_lib/ui/gtk/bases/listmodel.py</Source>
+    <Source>nomadic_recording_lib/ui/gtk/bases/clutter_bases.py</Source>
+    <Source>nomadic_recording_lib/ui/gtk/bases/ui_modules.py</Source>
+    <Source>nomadic_recording_lib/ui/gtk/bases/propertylist.py</Source>
+    <Source>nomadic_recording_lib/ui/gtk/bases/tree.py</Source>
+    <Source>nomadic_recording_lib/ui/gtk/bases/__init__.py</Source>
+    <Source>nomadic_recording_lib/ui/touchosc/widgets.py</Source>
+    <Source>nomadic_recording_lib/ui/touchosc/layout_parser.py</Source>
+    <Source>nomadic_recording_lib/ui/touchosc/touchosc_main.py</Source>
+    <Source>nomadic_recording_lib/ui/touchosc/__init__.py</Source>
+    <Source>nomadic_recording_lib/ui/iOSCControl/widgets.py</Source>
+    <Source>nomadic_recording_lib/ui/iOSCControl/sessionselect.py</Source>
+    <Source>nomadic_recording_lib/ui/iOSCControl/iOSCController.py</Source>
+    <Source>nomadic_recording_lib/ui/iOSCControl/basepage.py</Source>
+    <Source>nomadic_recording_lib/ui/iOSCControl/pagemenu.py</Source>
+    <Source>nomadic_recording_lib/ui/iOSCControl/jsonhandler.py</Source>
+    <Source>nomadic_recording_lib/ui/iOSCControl/__init__.py</Source>
+    <Source>nomadic_recording_lib/ui/bases/widgets.py</Source>
+    <Source>nomadic_recording_lib/ui/bases/simple.py</Source>
+    <Source>nomadic_recording_lib/ui/bases/__init__.py</Source>
+    <Source>nomadic_recording_lib/ui/fltk/fltkBaseUI.py</Source>
+    <Source>nomadic_recording_lib/ui/fltk/__init__.py</Source>
+    <Source>nomadic_recording_lib/ui/fltk/bases/widgets.py</Source>
+    <Source>nomadic_recording_lib/ui/fltk/bases/fltksimple.py</Source>
+    <Source>nomadic_recording_lib/ui/fltk/bases/ui_modules.py</Source>
+    <Source>nomadic_recording_lib/ui/fltk/bases/__init__.py</Source>
+    <Source>nomadic_recording_lib/ui/kivy/kivyBaseUI.py</Source>
+    <Source>nomadic_recording_lib/ui/kivy/editorbase.py</Source>
+    <Source>nomadic_recording_lib/ui/kivy/__init__.py</Source>
+    <Source>nomadic_recording_lib/ui/kivy/views/baseview.py</Source>
+    <Source>nomadic_recording_lib/ui/kivy/views/__init__.py</Source>
+    <Source>nomadic_recording_lib/ui/kivy/bases/widget_classes.py</Source>
+    <Source>nomadic_recording_lib/ui/kivy/bases/widgets.py</Source>
+    <Source>nomadic_recording_lib/ui/kivy/bases/__init__.py</Source>
+    <Source>nomadic_recording_lib/ui/qt/qtBaseUI.py</Source>
+    <Source>nomadic_recording_lib/ui/qt/__init__.py</Source>
+    <Source>nomadic_recording_lib/ui/qt/bases/widgets.py</Source>
+    <Source>nomadic_recording_lib/ui/qt/bases/qtsimple.py</Source>
+    <Source>nomadic_recording_lib/ui/qt/bases/__init__.py</Source>
+    <Source>nomadic_recording_lib/django-deployment/__init__.py</Source>
+    <Source>nomadic_recording_lib/django-deployment/deployment/do_setup.py</Source>
+    <Source>nomadic_recording_lib/django-deployment/deployment/virtualenvhandlers.py</Source>
+    <Source>nomadic_recording_lib/django-deployment/deployment/__init__.py</Source>
+    <Source>nomadic_recording_lib/django-deployment/deployment/dependency/acquisition.py</Source>
+    <Source>nomadic_recording_lib/django-deployment/deployment/dependency/packagelist.py</Source>
+    <Source>nomadic_recording_lib/django-deployment/deployment/dependency/__init__.py</Source>
+    <Source>nomadic_recording_lib/django-deployment/cloudinit/__init__.py</Source>
+    <Source>nomadic_recording_lib/django-deployment/cloudinit/cloudinit-builder.py</Source>
+    <Source>nomadic_recording_lib/web/__init__.py</Source>
+    <Source>nomadic_recording_lib/web/django_apps/__init__.py</Source>
+    <Source>nomadic_recording_lib/web/django_apps/utils/template_parser.py</Source>
+    <Source>nomadic_recording_lib/web/django_apps/utils/__init__.py</Source>
+    <Source>nomadic_recording_lib/web/django_apps/setup_wizard/models.py</Source>
+    <Source>nomadic_recording_lib/web/django_apps/setup_wizard/urls.py</Source>
+    <Source>nomadic_recording_lib/web/django_apps/setup_wizard/views.py</Source>
+    <Source>nomadic_recording_lib/web/django_apps/setup_wizard/__init__.py</Source>
+    <Source>nomadic_recording_lib/web/django_apps/appmodel_defaults/tests.py</Source>
+    <Source>nomadic_recording_lib/web/django_apps/appmodel_defaults/models.py</Source>
+    <Source>nomadic_recording_lib/web/django_apps/appmodel_defaults/views.py</Source>
+    <Source>nomadic_recording_lib/web/django_apps/appmodel_defaults/admin.py</Source>
+    <Source>nomadic_recording_lib/web/django_apps/appmodel_defaults/__init__.py</Source>
+    <Source>nomadic_recording_lib/web/django_apps/ticket_tracker/email_template_defaults.py</Source>
+    <Source>nomadic_recording_lib/web/django_apps/ticket_tracker/models.py</Source>
+    <Source>nomadic_recording_lib/web/django_apps/ticket_tracker/staff_user.py</Source>
+    <Source>nomadic_recording_lib/web/django_apps/ticket_tracker/urls.py</Source>
+    <Source>nomadic_recording_lib/web/django_apps/ticket_tracker/tracker.py</Source>
+    <Source>nomadic_recording_lib/web/django_apps/ticket_tracker/admin.py</Source>
+    <Source>nomadic_recording_lib/web/django_apps/ticket_tracker/ticket.py</Source>
+    <Source>nomadic_recording_lib/web/django_apps/ticket_tracker/__init__.py</Source>
+    <Source>nomadic_recording_lib/web/django_apps/ticket_tracker/messaging.py</Source>
+    <Source>nomadic_recording_lib/web/django_apps/ticket_tracker/email_backends/smtp.py</Source>
+    <Source>nomadic_recording_lib/web/django_apps/ticket_tracker/email_backends/base.py</Source>
+    <Source>nomadic_recording_lib/web/django_apps/ticket_tracker/email_backends/__init__.py</Source>
+    <Source>nomadic_recording_lib/web/django_apps/ticket_tracker/email_backends/pygmail.py</Source>
+    <Source>nomadic_recording_lib/web/django_apps/models_default_builder/models.py</Source>
+    <Source>nomadic_recording_lib/web/django_apps/models_default_builder/admin.py</Source>
+    <Source>nomadic_recording_lib/web/django_apps/models_default_builder/__init__.py</Source>
+    <Source>nomadic_recording_lib/web/random_tests/__init__.py</Source>
+    <Source>nomadic_recording_lib/web/random_tests/media_embed/__init__.py</Source>
+    <Source>nomadic_recording_lib/web/dhcpd_stats/config.py</Source>
+    <Source>nomadic_recording_lib/web/dhcpd_stats/tests.py</Source>
+    <Source>nomadic_recording_lib/web/dhcpd_stats/network_objects.py</Source>
+    <Source>nomadic_recording_lib/web/dhcpd_stats/parser.py</Source>
+    <Source>nomadic_recording_lib/web/dhcpd_stats/__init__.py</Source>
+    <Source>nomadic_recording_lib/web/cgi/getlog.py</Source>
+    <Source>nomadic_recording_lib/web/cgi/__init__.py</Source>
   </Sources>
-  <Forms>
-  </Forms>
-  <Translations>
-  </Translations>
-  <Resources>
-  </Resources>
-  <Interfaces>
-  </Interfaces>
+  <Forms/>
+  <Translations/>
+  <Resources/>
+  <Interfaces/>
   <Others>
     <Other>logs</Other>
+    <Other>.issues</Other>
   </Others>
   <MainScript>main.py</MainScript>
   <Vcs>
-    <VcsType>PySvn</VcsType>
+    <VcsType>None</VcsType>
     <VcsOptions>
       <dict>
         <key>
@@ -226,9 +330,9 @@
     </VcsOtherData>
   </Vcs>
   <FiletypeAssociations>
-    <FiletypeAssociation pattern="*.pyw" type="SOURCES" />
-    <FiletypeAssociation pattern="*.idl" type="INTERFACES" />
-    <FiletypeAssociation pattern="*.py" type="SOURCES" />
-    <FiletypeAssociation pattern="*.ptl" type="SOURCES" />
+    <FiletypeAssociation pattern="*.idl" type="INTERFACES"/>
+    <FiletypeAssociation pattern="*.ptl" type="SOURCES"/>
+    <FiletypeAssociation pattern="*.py" type="SOURCES"/>
+    <FiletypeAssociation pattern="*.pyw" type="SOURCES"/>
   </FiletypeAssociations>
 </Project>
