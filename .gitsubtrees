@@ -1,0 +1,5 @@
+[subtree "nomadic_recording_lib"]
+	remote = nomadic_recording_lib
+	branch = master
+	url = https://github.com/nocarryr/nomadic_recording_lib.git
+
