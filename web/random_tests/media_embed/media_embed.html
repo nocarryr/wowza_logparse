@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="media_embed.css" />
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.css" />
+    <link href="//vjs.zencdn.net/4.5/video-js.css" rel="stylesheet">
+    <link type="text/css" href="strobe-media/jquery.strobemediaplayback.css" rel="stylesheet" />
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js"></script>
+    <script src="//vjs.zencdn.net/4.5/video.js"></script>
+    <!--<script src="videojs.hls.min.js"></script>-->
+    <script src="strobe-media/lib/swfobject.js"></script>
+    <script src="strobe-media/jquery.strobemediaplayback.js"></script>
+</head>
+<body>
+    <div data-role="page">
+        <div data-role="content">
+            <div id="player-container" class="player-container"></div>
+            <form>
+                <fieldset class="ui-grid-b" id="stream_input_fieldset">
+                    <div class="ui-block-a">
+                        <label for="base_url_input">Base URL:</label>
+                        <input type="text" name="base_url" id="base_url_input" value="">
+                    </div>
+                    <div class="ui-block-b">
+                        <label for="app_name_input">App Name:</label>
+                        <input type="text" name="app_name" id="app_name_input" value="">
+                    </div>
+                    <div class="ui-block-c">
+                        <label for="stream_name_input">Stream Name:</label>
+                        <input type="text" name="stream_name" id="stream_name_input" value="">
+                    </div>
+                </fieldset>
+                <fieldset class="ui-grid-a" id="player_size_fieldset">
+                    <legend>Player Size</legend>
+                    <div class="ui-block-a">
+                        <input type="text" name="player_width" id="player_width_input">
+                        <label for="player_width_input">Width</label>
+                    </div>
+                    <div class="ui-block-b">
+                        <input type="text" name="player_height" id="player_height_input">
+                        <label for="player_height_input">Height</label>
+                    </div>
+                </fieldset>
+                <fieldset data-role="controlgroup" data-type="horizontal" id="embedtype_fieldset">
+                    <legend>Choose Embed Method:</legend>
+                    <input type="radio" name="embed_method" id="embed_method_auto" value="auto" checked="checked">
+                    <label for="embed_method_auto">Auto</label>
+                    <input type="radio" name="embed_method" id="embed_method_rtmp" value="rtmp">
+                    <label for="embed_method_rtmp">Flash RTMP</label>
+                    <input type="radio" name="embed_method" id="embed_method_hls" value="hls">
+                    <label for="embed_method_hls">Apple HLS</label>
+                    <input type="radio" name="embed_method" id="embed_method_vidtag" value="vidtag">
+                    <label for="embed_method_vidtag">HTML5 video tag</label>
+                    <input type="radio" name="embed_method" id="embed_method_videojs" value="videojs">
+                    <label for="embed_method_videojs">VideoJS</label>
+                    <input type="radio" name="embed_method" id="embed_method_strobe" value="strobe">
+                    <label for="embed_method_strobe">OSMF Strobe</label>
+                </fieldset>
+                <label for="stream_url_input">Full URL:</label>
+                <input type="text" name="stream_url" id="stream_url_input">
+                <div class="ui-grid-b">
+                    <div class="ui-block-a"><button class="ui-btn" id="start-btn">Start</button></div>
+                    <div class="ui-block-b"><button class="ui-btn" id="stop-btn">Stop</button></div>
+                    <div class="ui-block-c"><button class="ui-btn" id="clear-btn">Clear Input</button></div>
+                </div>
+            </form>
+            <div id="debug-div" class="debug-div"></div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        function showDebug(s){
+            if (typeof(s) != "string"){
+                s = JSON.stringify(s);
+            }
+            $("#debug-div").append('<p>S</p>'.replace('S', s));
+        }
+        $("[data-role=page]").on("pagecreate", function(){
+            showDebug(MobileDetector.getData());
+        });
+    </script>
+    <script src="mobile-detect.js"></script>
+    <script src="media_embed.js"></script>
+
+</body>
