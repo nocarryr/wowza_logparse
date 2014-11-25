@@ -21,6 +21,7 @@ import subprocess
 import threading
 import uuid
 import bisect
+import numbers
 
 from BaseObject import BaseObject
 from RepeatTimer import RepeatTimer
@@ -263,3 +264,49 @@ class Interpolator(object):
             return _y[0]
         return _y[0] + (_y[1] - _y[0]) * ((x - _x[0]) / (_x[1] - _x[0]))
         
+class ZeroCenteredGroup(dict):
+    def __init__(self, **kwargs):
+        super(ZeroCenteredGroup, self).__init__()
+        #self.reverse_order = kwargs.get('reverse_order', False)
+        self._calculating_items = False
+        self.center_index = 0
+        self.max_index = 0
+        self.centered_items = {}
+        self.item_map = {}
+    def get_zero_centered(self, key):
+        try:
+            i = self.item_map[key]
+        except KeyError:
+            print {'key':key, 'centered_items':self.centered_items, 'item_map':self.item_map}
+            raise
+        return i
+    def recalculate_items(self):
+        if self._calculating_items:
+            return
+        self._calculating_items = True
+        self.max_index = max(self.keys())
+        if self.max_index == 0:
+            self.center_index = 0
+        else:
+            self.center_index = self.max_index / 2.
+        for key, val in self.iteritems():
+            i = key - self.center_index
+            self.centered_items[i] = val
+            self.item_map[key] = i
+        removed = set(self.item_map.keys()) - set(self.keys())
+        for key in removed:
+            if self.item_map[key] in self.centered_items:
+                del self.centered_items[self.item_map[key]]
+            del self.item_map[key]
+        self._calculating_items = False
+    def __setitem__(self, key, item):
+        if not isinstance(key, numbers.Number):
+            raise 'Keys must be numerical for this object'
+        if key < 0:
+            raise 'Keys must be positive numbers'
+        super(ZeroCenteredGroup, self).__setitem__(key, item)
+        self.recalculate_items()
+    def __delitem__(self, key):
+        super(ZeroCenteredGroup, self).__delitem__(key)
+        self.recalculate_items()
+    
