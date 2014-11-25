@@ -1,7 +1,7 @@
 import traceback
 import datetime
 
-from Bases import logfileparser
+from nomadic_recording_lib.Bases import logfileparser
 
 LOGFILE_DATETIME_FMT_STR = '%Y-%m-%d %H:%M:%S.%f'
 

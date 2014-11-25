@@ -6,8 +6,8 @@ import urllib
 import urllib2
 import datetime
 import threading
-sys.path.append('nomadic_recording_lib')
-from Bases import BaseObject, logfileparser
+
+from nomadic_recording_lib.Bases import BaseObject, logfileparser
 
 from wowzaparser import WowzaLogParser, parse_filename_dt
 
