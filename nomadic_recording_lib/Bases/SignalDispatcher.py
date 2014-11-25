@@ -131,9 +131,12 @@ class SignalEmitter(object):
         lockcls = get_Lock_class()
         if getattr(lockcls, '_is_threadbases_Lock', False):
             self.emission_lock = lockcls(owner_thread=self.emission_thread)
+            self.own_emission_lock = lockcls(owner_thread=self.emission_thread)
         else:
             self.emission_lock = lockcls()
+            self.own_emission_lock = lockcls()
         #self.emission_lock = threading.Lock()
+        self.own_callbacks = set()
         self.weakrefs = weakref.WeakValueDictionary()
         
     @property
@@ -172,8 +175,11 @@ class SignalEmitter(object):
         #self.get_lock()
         cb = kwargs.get('callback')
         objID = id(cb.im_self)
-        wrkey = (cb.im_func, objID)
-        self.weakrefs[wrkey] = cb.im_self
+        if getattr(cb, 'im_self', None) == self.parent_obj:
+            self.own_callbacks.add(cb)
+        else:
+            wrkey = (cb.im_func, objID)
+            self.weakrefs[wrkey] = cb.im_self
         #self.release_lock()
         return objID
         
@@ -193,6 +199,9 @@ class SignalEmitter(object):
                     result = True
             return result
         if cb is not None:
+            if cb in self.own_callbacks:
+                self.own_callbacks.discard(cb)
+                return True
             wrkey = (cb.im_func, id(cb.im_self))
             if wrkey in self.weakrefs:
                 #self.get_lock()
@@ -208,6 +217,8 @@ class SignalEmitter(object):
             return True
             
     def emit(self, *args, **kwargs):
+        if self.own_emission_lock.locked():
+            return
         t = self.emission_thread
         #if t is not None and t._thread_id != threading.currentThread().name:
         if t is not None and not t.can_currentthread_emit:
@@ -217,6 +228,9 @@ class SignalEmitter(object):
             self._do_emit(*args, **kwargs)
             
     def _do_emit(self, *args, **kwargs):
+        with self.own_emission_lock:
+            for cb in self.own_callbacks.copy():
+                cb(**kwargs)
         r = self.get_lock()
         if not r:
             return

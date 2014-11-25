@@ -323,7 +323,11 @@ class BaseObject(SignalDispatcher.dispatcher, Serializer):
             kwargs.setdefault('osc_parent_node', self.osc_node)
         kwargs.setdefault('parent_obj', self)
         kwargs.setdefault('ParentEmissionThread', self.ParentEmissionThread)
-        cg = ChildGroup(**kwargs)
+        cls = ChildGroup
+        if kwargs.get('zero_centered', False):
+            cls = ZeroCenteredChildGroup
+            del kwargs['zero_centered']
+        cg = cls(**kwargs)
         self.ChildGroups.update({cg.name:cg})
         setattr(self, cg.name, cg)
         return cg
@@ -359,7 +363,7 @@ class BaseObject(SignalDispatcher.dispatcher, Serializer):
         return LOGGER
 
 from misc import iterbases
-from ChildGroup import ChildGroup
+from ChildGroup import ChildGroup, ZeroCenteredChildGroup
 
 class _GlobalConfig(BaseObject, UserDict.UserDict):
     def __init__(self, **kwargs):

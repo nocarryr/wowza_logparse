@@ -3,6 +3,7 @@ from osc_base import OSCBaseObject as _OSCBaseObject
 from partial import Partial as _Partial
 from threadbases import BaseThread as _BaseThread
 from ChildGroup import ChildGroup as _ChildGroup
+from ChildGroup import ZeroCenteredChildGroup as _ZeroCenteredChildGroup
 from category import Category as _Category
 from config import Config as _Config
 from FileManager import FileManager as _FileManager
@@ -19,6 +20,7 @@ OSCBaseObject = _OSCBaseObject
 Partial = _Partial
 BaseThread = _BaseThread
 ChildGroup = _ChildGroup
+ZeroCenteredChildGroup = _ZeroCenteredChildGroup
 Category = _Category
 Config = _Config
 FileManager = _FileManager
