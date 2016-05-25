@@ -101,7 +101,7 @@ def parse_files(path, **kwargs):
 def main():
     p = argparse.ArgumentParser()
     p.add_argument('-s', dest='host', default='localhost')
-    p.add_argument('-p', dest='port', type=int, default=27107)
+    p.add_argument('-p', dest='port', type=int, default=27017)
     p.add_argument('-d', dest='database', default='wowzalogs')
     p.add_argument('path')
     args = p.parse_args()
