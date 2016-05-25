@@ -71,7 +71,6 @@ class LogFile(object):
     def add_entry(self, entry):
         coll = self.db.entries
         dt = entry.dt
-        #dt = dt.replace(microsecond=int(round(dt.microsecond * 1000)))
         dt = dt.replace(microsecond=0)
         doc = {
             'file_id':self.file_id,
@@ -80,7 +79,7 @@ class LogFile(object):
         }
         existing = coll.find(doc)
         if existing.count():
-            raise Exception('doc {} exists: {}'.format(doc, [_doc for _doc in existing]))
+            #raise Exception('doc {} exists: {}'.format(doc, [_doc for _doc in existing]))
             return False
         doc.update(entry.fields)
         coll.insert_one(doc)
