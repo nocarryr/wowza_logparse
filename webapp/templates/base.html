@@ -1,0 +1,30 @@
+{% extends "base-shell.html" %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+{% endblock %}
+
+{% block body %}
+<nav class="collections-nav panel">
+    {% block nav %}
+    {# <ul>
+        {% for slug, coll in log_collections|dictsort %}
+            <li><a href="{{ coll.url }}">{{ coll.name }}</a></li>
+        {% endfor %}
+    </ul> #}
+    {% endblock %}
+</nav>
+<div class="row">
+    <section class="main col">
+        {% block main %}{% endblock %}
+    </section>
+    <div class="sidebar col">
+        {% block sidebar %}{% endblock %}
+    </div>
+</div>
+
+{% block js_foot %}
+<script src="//code.jquery.com/jquery-1.12.3.min.js"></script>
+{% endblock %}
+
+{% endblock %}

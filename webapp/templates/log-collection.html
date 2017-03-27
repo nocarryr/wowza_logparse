@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.1.0/jquery.contextMenu.min.css">
+{% endblock %}
+
+{% macro sort_icon_class(field_name) -%}
+fa fa-sort{% if sort_field == field_name %}{% if sort_dir == 'up' %}-up{% else %}-down{% endif %}{% endif %}
+{%- endmacro %}
+
+{% block main %}
+<div class="pagination panel" data-page-num="{{ page_num }}">
+    <a href="#" class="prev-page"{% if page_num <= 1 %} disabled{% endif %}>Previous <i class="fa fa-arrow-left"></i></a>
+    <p>Page {{ page_num }} of {{ total_pages }}</p>
+    <a href="#" class="next-page"{% if not has_more %} disabled{% endif %}>Next <i class="fa fa-arrow-right"></i></a>
+</div>
+
+<table class="log-table" data-collection-name="wowza">
+    <thead><tr>
+        {% for field_name in field_names %}
+            <td class="field-header{% if field_name in hidden_fields %} hidden{% endif %}"
+                id="{{ field_name }}_header"
+                data-field-name="{{ field_name }}">
+                <a class="field-header-link" href="#">{{ field_name|title }}
+                    <i class="{{ sort_icon_class(field_name) }}" aria-hidden="true"></i>
+                </a>
+            </td>
+        {% endfor %}
+    </tr></thead>
+    <tbody>
+        {% for entry in entry_iter %}
+            <tr class="log-entry-row" data-object-id="{{ entry._id }}">
+                {% for field_name in field_names %}
+                    <td class="log-entry-field{% if field_name in hidden_fields %} hidden{% endif %}"
+                        {# data-uniques-href="{{ url_for('unique_field_values', slug=slug, field_name=field_name) }}" #}
+                        data-field-name="{{ field_name }}"
+                        data-field-value="{{ entry[field_name] }}">{{ entry[field_name] }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
+{% block sidebar %}
+<div class="sidebar-item">
+    <h2>Active Fields</h2>
+    <ul class="active-fields">
+        {% for field_name in field_names %}
+            <li>
+                <button
+                    type="button"
+                    class="button"
+                    data-field-name="{{ field_name }}">{{ field_name|title }}
+                </button>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
+
+{% block js_foot %}
+{{ super() }}
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.1.0/jquery.contextMenu.min.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $(".log-table").data('query_data', {{ query_data|safe }});
+    });
+</script>
+<script src="{{ url_for('static', filename='js/filters.js') }}"></script>
+<script src="{{ url_for('static', filename='js/log-collection.js') }}"></script>
+{% endblock %}

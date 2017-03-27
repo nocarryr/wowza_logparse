@@ -1,0 +1,11 @@
+{% extends "log-collection.html" %}
+
+{% block main %}
+<h2>Unique Values</h2>
+<p>Showing uniques for field "{{ field_name }}" in {{ collection_name }}</p>
+<ul class="field-values" data-collection-name="{{ collection_name }}" data-field-name="{{ field_name }}">
+    {% for value in values %}
+        <li><a href="{{ url_for('log_collection', slug=slug) }}">{{ value }}</a></li>
+    {% endfor %}
+</ul>
+{% endblock %}

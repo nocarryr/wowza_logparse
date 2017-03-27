@@ -1,0 +1,126 @@
+body{
+    background-color: rgb(82, 82, 82);
+    color: rgb(240, 240, 240);
+}
+a:link{
+    color: rgb(200, 220, 255);
+}
+a:visited{
+    color: rgb(174, 175, 255);
+}
+a:hover{
+    color: rgb(217, 231, 255)
+}
+.panel{
+    background-color: rgba(255, 255, 255, 0.2);
+    /*border-top-right-radius: 1em 1em;
+    border-bottom-right-radius: 1em 1em;*/
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(200, 200, 200);
+}
+.collections-nav{
+    display: flex;
+    flex-direction: row;
+}
+.collections-nav ul{
+    flex: auto;
+    flex-direction: row;
+    display: flex;
+    list-style-type: none;
+}
+.collections-nav li{
+    flex: auto;
+}
+.row{
+    display: flex;
+    flex-flow: row;
+}
+.row > .main{
+    flex: 0 0 80%;
+    order: 1;
+    max-width: 80%;
+    overflow-x: scroll;
+}
+.row > .sidebar{
+    flex: 0 1 20%;
+    order: 2;
+    max-width: 20%;
+}
+.sidebar{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding-left: 1em;
+}
+.sidebar ul{
+    list-style-type: none;
+    padding-left: 0px;
+}
+.pagination{
+    display: inline-flex;
+}
+.pagination a,p{
+    margin: 1em;
+}
+.log-table{
+    border-collapse: collapse;
+}
+.log-table th,td{
+    border-width: 1px;
+    border-style: solid;
+    font-family: monospace;
+    font-size:.85em;
+}
+.field-header{
+
+}
+.field-header-link{
+    display: inline-flex;
+}
+.field-header-link i{
+    margin-left: 1em;
+}
+.log-entry-row{
+
+}
+.log-entry-field{
+
+}
+.log-entry-field:hover{
+    background-color: rgba(255, 255, 255, .2);
+}
+.hidden{
+    display: none;
+}
+.button{
+    background-color: rgb(140, 140, 140);
+    width: 100%;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    margin-bottom: 2px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: white;
+    color: rgb(245, 245, 245);
+}
+.button:hover{
+    background-color: rgb(175, 175, 175);
+}
+.button.active{
+    background-color: hsl(224, 100%, 77%);
+    color: black;
+}
+.button.active:hover{
+    background-color: hsl(224, 100%, 87%);
+}
+.field-values{
+    list-style-type: none;
+}
+.field-values li{
+    border-width: 1px;
+    border-style: solid;
+    font-family: monospace;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
