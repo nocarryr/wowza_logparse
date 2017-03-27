@@ -88,7 +88,7 @@ class LogFile(object):
 
 def parse_files(path, **kwargs):
     client = Client(**kwargs)
-    for fn in os.listdir(path):
+    for fn in sorted(os.listdir(path)):
         if fn.lower().endswith('log'):
             continue
         if 'log' not in fn.lower():
