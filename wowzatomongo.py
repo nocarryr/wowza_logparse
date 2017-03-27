@@ -60,9 +60,7 @@ class LogFile(object):
     def add_entries(self):
         coll = self.db.entries
         coll.create_index([('file_id', pymongo.ASCENDING)])
-        coll.create_index([
-            ('datetime', pymongo.ASCENDING),
-            ('datetime_subindex', pymongo.ASCENDING)])
+        coll.create_index([('datetime', pymongo.ASCENDING)])
         num_added = 0
         num_skipped = 0
         by_dt = self.parser.parsed['entries_by_dt']
