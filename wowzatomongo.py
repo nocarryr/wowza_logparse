@@ -24,6 +24,11 @@ class Client(object):
         )
         self.db = self.client[db_name]
 
+def combined_datetime(dt, datetime_subindex):
+    dt = dt.replace(microsecond=0)
+    dt += datetime.timedelta(microseconds=datetime_subindex*1000)
+    return dt
+
 class LogFile(object):
     def __init__(self, client, filename):
         self.client = client
@@ -70,12 +75,10 @@ class LogFile(object):
         return num_added, num_skipped
     def add_entry(self, entry):
         coll = self.db.entries
-        dt = entry.dt
-        dt = dt.replace(microsecond=0)
+        dt = combined_datetime(entry.dt, entry.datetime_subindex)
         doc = {
             'file_id':self.file_id,
             'datetime':dt,
-            'datetime_subindex':entry.dt_index,
         }
         existing = coll.find(doc)
         if existing.count():
