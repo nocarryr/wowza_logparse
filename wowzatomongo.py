@@ -1,5 +1,6 @@
 import os
 import argparse
+import datetime
 
 import pymongo
 from pymongo import MongoClient
@@ -73,7 +74,7 @@ class LogFile(object):
         return num_added, num_skipped
     def add_entry(self, entry):
         coll = self.db.entries
-        dt = combined_datetime(entry.dt, entry.datetime_subindex)
+        dt = combined_datetime(entry.dt, entry.dt_index)
         doc = {
             'file_id':self.file_id,
             'datetime':dt,
