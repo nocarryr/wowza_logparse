@@ -49,11 +49,13 @@ class LogFile(object):
             self.file_id = r.inserted_id
         else:
             self.file_id = file_doc['_id']
-        if file_doc['parsed']:
+        self.file_doc = file_doc
+    def __call__(self):
+        if self.file_doc['parsed']:
             print('skipping file {}'.format(self.base_fn))
         else:
             print('parsing file {}'.format(self.base_fn))
-            self.parser.filename = filename
+            self.parser.filename = self.filename
             added, skipped = self.add_entries()
             print('added {}, skipped {}'.format(added, skipped))
             self.file_coll.update_one(
@@ -100,40 +102,49 @@ session_model = {
 }
 
 class Session(object):
-    def __init__(self, client, first_entry):
+    def __init__(self, client, first_entry=None, session_doc=None):
         self.client = client
         self.db = client.db
         self.first_entry = first_entry
         self.entry_coll = self.db.entries
         self.session_coll = self.db.sessions
-        self.session_doc = self.session_coll.find_one({'first_entry':self.first_entry['_id']})
-        if self.session_doc is None:
-            self.session_doc = self.build_doc()
+        if session_doc is not None:
+            self.session_doc = session_doc
+            self.first_entry = self.entry_coll.find_one({
+                '_id':session_doc['first_entry'],
+            })
+        else:
+            self.session_doc = self.session_coll.find_one({
+                'first_entry':self.first_entry['_id']
+            })
+            if self.session_doc is None:
+                self.build_doc()
     @classmethod
-    def create(cls, client, first_entry):
-        session = cls(client, first_entry)
+    def create(cls, client, first_entry=None, session_doc=None):
+        session = cls(client, first_entry, session_doc)
         session()
         return session
     @classmethod
-    def build_sessions(cls, client):
+    def build_sessions(cls, client, logfile=None):
         db = client.db
         session_coll = db.sessions
         entry_coll = db.entries
         entry_coll.create_index('c-client-id')
         entry_coll.create_index('session_id')
-        sessions = session_coll.find({'complete':False})
-        print('updating {} incomplete sessions'.format(sessions.count()))
-        for doc in sessions:
-            entry = entry_coll.find_one({'_id':doc['first_entry']})
-            cls.create(client, entry)
-        filt = {'session_parsed':{'$ne':True}}
+        session_coll.create_index([('start_datetime', pymongo.ASCENDING)])
+        filt = {'session_parsed':{'$ne':True}, 'session_id':None}
+        if logfile is not None:
+            if logfile.file_doc.get('sessions_parsed'):
+                return
+            filt['file_id'] = logfile.file_id
         num_created = 0
         for event_name in ['connect', 'create', 'play']:
             filt['x-event'] = event_name
             entries = entry_coll.find(filt, sort=[('datetime', pymongo.ASCENDING)])
+            entry_ids = entries.distinct('_id')
             print('searching event_name: {}, num_entries={}'.format(event_name, entries.count()))
-            for entry in entries:
-                entry = entry_coll.find_one({'_id':entry['_id']})
+            for entry_id in entry_ids:
+                entry = entry_coll.find_one({'_id':entry_id})
                 if entry.get('session_parsed'):
                     continue
                 if not entry['c-client-id']:
@@ -142,6 +153,24 @@ class Session(object):
                 num_created += 1
                 if num_created % 100 == 0:
                     print('created {} sessions: {}'.format(num_created, session.session_doc['start_datetime']))
+        logfile.file_coll.update_one(
+            {'_id':logfile.file_id},
+            {'$set':{'sessions_parsed':True}}
+        )
+        cls.finalize_incomplete_sessions(client)
+    @classmethod
+    def finalize_incomplete_sessions(cls, client):
+        db = client.db
+        session_coll = db.sessions
+        sessions = session_coll.find({'populated':False})
+        print('populating {} incomplete sessions'.format(sessions.count()))
+        for doc in sessions:
+            cls.create(client, session_doc=doc)
+        sessions = session_coll.find({'complete':False, 'populated':True})
+        print('updating {} populated sessions'.format(sessions.count()))
+        for doc in sessions:
+            session = cls(client, session_doc=doc)
+            session.update_session()
     def __call__(self):
         doc = self.session_doc
         if doc['complete']:
@@ -159,14 +188,13 @@ class Session(object):
             'start_datetime':self.first_entry['datetime'],
             'first_entry':self.first_entry['_id'],
             'complete':False,
+            'populated':False,
             'entries':[self.first_entry['_id']],
         }
         r = self.session_coll.insert_one(d)
         d['_id'] = r.inserted_id
-        self.entry_coll.update_one(
-            {'_id':self.first_entry['_id']},
-            {'$set':{'session_id':d['_id'], 'session_parsed':True}}
-        )
+        self.session_doc = d
+        self.add_entries(self.first_entry)
         return d
     def update_doc(self, data=None):
         def build_update(_doc):
@@ -179,10 +207,11 @@ class Session(object):
                 {'_id':doc['_id']},
                 build_update(data),
             )
-        self.session_coll.update_one(
-            {'_id':doc['_id']},
-            build_update(doc),
-        )
+        else:
+            self.session_coll.update_one(
+                {'_id':doc['_id']},
+                build_update(doc),
+            )
     def get_entries_filter(self):
         start_dt = self.first_entry['datetime']
         end_dt = start_dt + datetime.timedelta(days=7)
@@ -195,7 +224,23 @@ class Session(object):
         return self.entry_coll.find(filt)
     def get_session_entries(self):
         doc = self.session_doc
-        return self.entry_coll.find({'session_id':doc['_id']})
+        return self.entry_coll.find({
+            'session_id':doc['_id'],
+            'session_parsed':{'$ne':True},
+        })
+    def add_entries(self, *entries, **kwargs):
+        do_doc_update = kwargs.get('update_doc', True)
+        doc = self.session_doc
+        all_ids = [e['_id'] for e in entries]
+        missing_ids = [e_id for e_id in all_ids if e_id not in doc['entries']]
+        if len(missing_ids):
+            doc['entries'].extend(missing_ids)
+            if do_doc_update:
+                self.update_doc()
+        self.entry_coll.update_many(
+            {'_id':{'$in':all_ids}},
+            {'$set':{'session_id':doc['_id'], 'session_parsed':True}}
+        )
     def populate(self):
         doc = self.session_doc
         if doc.get('end_datetime') is not None:
@@ -206,15 +251,14 @@ class Session(object):
         if not entries.count():
             return False
         complete = False
-        for entry in entries.sort('datetime', pymongo.ASCENDING):
-            doc['entries'].append(entry['_id'])
-            if entry['x-event'] in ['disconnect', 'destroy']:
-                doc['end_datetime'] = entry['datetime']
-                complete = True
-        self.entry_coll.update_many(
-            {'_id':{'$in':doc['entries']}},
-            {'$set':{'session_id':doc['_id'], 'session_parsed':True}}
-        )
+        def iter_entries(_entries):
+            for entry in _entries.sort('datetime', pymongo.ASCENDING):
+                yield entry
+                if entry['x-event'] in ['disconnect', 'destroy']:
+                    doc['end_datetime'] = entry['datetime']
+                    doc['populated'] = True
+                    break
+        self.add_entries(*iter_entries(entries), update_doc=False)
         doc['complete'] = complete
         self.update_doc()
         return complete
@@ -233,6 +277,7 @@ class Session(object):
                 data['end_datetime'] = entry['datetime']
             current_duration = entry['datetime'] - start_dt
             entry['current_duration'] = current_duration.total_seconds()
+            entry['session_parsed'] = True
 
             if entry['sc-bytes'] is not None:
                 b = int(entry['sc-bytes'])
@@ -276,10 +321,23 @@ def parse_files(path, **kwargs):
             continue
         fn = os.path.join(path, fn)
         lf = LogFile(client=client, filename=fn)
+        lf()
+        Session.build_sessions(client, lf)
+    Session.finalize_incomplete_sessions(client)
 
-def parse_sessions(**kwargs):
+def parse_sessions(path, **kwargs):
     client = Client(**kwargs)
-    Session.build_sessions(client)
+    for fn in sorted(os.listdir(path)):
+        if fn.lower().endswith('log'):
+            continue
+        if 'log' not in fn.lower():
+            continue
+        if 'access' not in fn.lower():
+            continue
+        fn = os.path.join(path, fn)
+        lf = LogFile(client=client, filename=fn)
+        Session.build_sessions(client, lf)
+    Session.finalize_incomplete_sessions(client)
 
 def main():
     p = argparse.ArgumentParser()
@@ -294,9 +352,10 @@ def main():
         'database':args.database,
     }
     print(args.path, kwargs)
-    if not args.sessions_only:
+    if args.sessions_only:
+        parse_sessions(args.path, **kwargs)
+    else:
         parse_files(args.path, **kwargs)
-    parse_sessions(**kwargs)
 
 if __name__ == '__main__':
     main()
