@@ -7,11 +7,12 @@
 {% block body %}
 <nav class="collections-nav panel">
     {% block nav %}
-    {# <ul>
-        {% for slug, coll in log_collections|dictsort %}
-            <li><a href="{{ coll.url }}">{{ coll.name }}</a></li>
-        {% endfor %}
-    </ul> #}
+    <ul class="nav">
+        <li class="nav-item">
+            <a class="nav-link{% if log_type == 'entries' %} active{% endif %}" href="{{ url_for('entries_collection') }}">Entries</a>
+            <a class="nav-link{% if log_type == 'sessions' %} active{% endif %}" href="{{ url_for('sessions_collection') }}">Sessions</a>
+        </li>
+    </ul>
     {% endblock %}
 </nav>
 <div class="row">

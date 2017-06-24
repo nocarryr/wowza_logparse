@@ -68,7 +68,10 @@ def build_query(filters=None, sorting=None):
 
 def get_entries(context, **kwargs):
     db = get_db()
-    coll = db.entries
+    if context.get('log_type') == 'entries':
+        coll = db.entries
+    elif context.get('log_type') == 'sessions':
+        coll = db.sessions
     query = context.get('query')
     return query(coll, **kwargs)
 
@@ -77,19 +80,27 @@ def get_session_context(context=None):
     if context is None:
         context = {}
     db = get_db()
+    if context.get('log_type') == 'entries':
+        coll = db.entries
+        dt_field = 'datetime'
+    elif context.get('log_type') == 'sessions':
+        coll = db.sessions
+        dt_field = 'start_datetime'
+    else:
+        coll = None
     query = context.get('query')
-    if query is None:
+    if query is None and coll is not None:
         now = datetime.datetime.now()
         now = TZ.localize(now)
         start_dt = now - datetime.timedelta(days=90)
         query = build_query(
-            sorting=[('datetime', True)],
+            sorting=[(dt_field, True)],
         )
         context['query'] = query
-    if 'field_names' not in context:
-        context['field_names'] = sorted(db.entries.find_one().keys())
-    if 'hidden_fields' not in context:
-        context['hidden_fields'] = ['_id']
+        if 'field_names' not in context:
+            context['field_names'] = sorted(coll.find_one().keys())
+        if 'hidden_fields' not in context:
+            context['hidden_fields'] = ['_id']
     return context
 
 
@@ -100,9 +111,7 @@ def parse_query_string(request):
     rdata = unquote_plus(rdata)
     return parse_qs(rdata)
 
-@app.route('/')
-def log_collection():
-    context = get_session_context()
+def log_collection(request, context):
     qdata = request.args.get('_QueryGroup_')
     if qdata is not None:
         context['query'] = jsonfactory.loads(qdata)
@@ -140,6 +149,24 @@ def log_collection():
     ))
     return render_template('log-collection.html', **context)
 
+@app.route('/entries')
+def entries_collection():
+    context = get_session_context()
+    if context.get('log_type') != 'entries':
+        context = get_session_context({'log_type':'entries'})
+    return log_collection(request, context)
+
+@app.route('/sessions')
+def sessions_collection():
+    context = get_session_context()
+    if context.get('log_type') != 'sessions':
+        context = get_session_context({'log_type':'sessions'})
+    return log_collection(request, context)
+
+@app.route('/')
+def home():
+    context = get_session_context()
+    return render_template('home.html', **context)
 
 if __name__ == '__main__':
     app.run()

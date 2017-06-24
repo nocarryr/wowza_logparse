@@ -59,7 +59,7 @@ $(function(){
         setLocation($(".pagination").data('pageNum') - 1);
     });
 
-    $(".log-entry-field[data-field-name=datetime]").each(function(){
+    $(".log-entry-field[data-field-name*=datetime]").each(function(){
         var $td = $(this),
             d = new Date($td.text());
         $td.text(d.toLocaleString()).data('fieldValue', d);
