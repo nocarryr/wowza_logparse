@@ -11,6 +11,7 @@ from flask import Flask, request, render_template, g, url_for
 from werkzeug.local import LocalProxy
 import jsonfactory
 from pymongo import MongoClient
+from bson.objectid import ObjectId
 
 from filters import QueryGroup
 
@@ -72,6 +73,8 @@ def get_entries(context, **kwargs):
         coll = db.entries
     elif context.get('log_type') == 'sessions':
         coll = db.sessions
+    elif context.get('log_type') == 'single_session':
+        coll = db.entries
     query = context.get('query')
     return query(coll, **kwargs)
 
@@ -86,6 +89,14 @@ def get_session_context(context=None):
     elif context.get('log_type') == 'sessions':
         coll = db.sessions
         dt_field = 'start_datetime'
+    elif context.get('log_type') == 'single_session':
+        s = db.sessions.find_one({'_id':context['session_id']})
+        coll = db.entries
+        query = build_query({'_id__in':s['entries']}, sorting=[('datetime', True)])
+        context['field_names'] = sorted(coll.find_one().keys())
+        context['hidden_fields'] = ['_id']
+        context['query'] = query
+        return context
     else:
         coll = None
     query = context.get('query')
@@ -162,6 +173,23 @@ def sessions_collection():
     if context.get('log_type') != 'sessions':
         context = get_session_context({'log_type':'sessions'})
     return log_collection(request, context)
+
+@app.route('/sessions/session/<session_id>')
+def session_item(session_id):
+    context = get_session_context({
+        'log_type':'single_session',
+        'session_id':ObjectId(session_id),
+    })
+    results = get_entries(context)
+    context.update(dict(
+        has_more=False,
+        page_num=1,
+        total_pages=1,
+        per_page=results.count(),
+        entry_iter=results,
+        query_data=jsonfactory.dumps(context['query']),
+    ))
+    return render_template('log-collection.html', **context)
 
 @app.route('/')
 def home():

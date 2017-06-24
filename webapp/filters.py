@@ -3,6 +3,7 @@ import datetime
 
 import pytz
 import pymongo
+from bson.objectid import ObjectId
 import jsonfactory
 
 UTC = pytz.UTC
@@ -275,7 +276,11 @@ class JsonFilterHandler(object):
     def encode(self, o):
         if isinstance(o, (SelectorBase, Query, QueryGroup)):
             return o._serialize()
+        elif isinstance(o, ObjectId):
+            return {'_ObjectId_':str(o)}
     def decode(self, d):
+        if '_ObjectId_' in d:
+            return ObjectId(d['_ObjectId_'])
         for key, cls in self.cls_map.items():
             if key in d:
                 return cls._deserialize(d[key])

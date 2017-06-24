@@ -36,7 +36,11 @@ fa fa-sort{% if sort_field == field_name %}{% if sort_dir == 'up' %}-up{% else %
                     <td class="log-entry-field{% if field_name in hidden_fields %} hidden{% endif %}"
                         {# data-uniques-href="{{ url_for('unique_field_values', slug=slug, field_name=field_name) }}" #}
                         data-field-name="{{ field_name }}"
-                        data-field-value="{{ entry[field_name] }}">{{ entry[field_name] }}</td>
+                        data-field-value="{{ entry[field_name] }}">
+                        {% if log_type == 'sessions' %}<a href="{{ url_for('session_item', session_id=entry._id)}}">{{ entry[field_name] }}</a>
+                        {% else %}{{ entry[field_name] }}
+                        {% endif %}
+                    </td>
                 {% endfor %}
             </tr>
         {% endfor %}
